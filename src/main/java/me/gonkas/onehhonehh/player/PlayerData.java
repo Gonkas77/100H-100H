@@ -15,8 +15,13 @@ public class PlayerData {
         if (!player_file.exists()) {
             player_file.createNewFile();
 
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
-            config.set("account-name", player.getName());
+            updateFile(player, new String[]{"timer_toggle", "on"});
+            updateFile(player, new String[]{"timer_display", "action_bar"});
+            updateFile(player, new String[]{"timer_color", "white", "white"});
+            updateFile(player, new String[]{"timer_text_type", "normal", "normal"});
+            updateFile(player, new String[]{"sound_toggle", "on"});
+            updateFile(player, new String[]{"title_display", "on"});
+            updateFile(player, new String[]{"hp_bars_display", "all"});
         }
     }
 
@@ -109,7 +114,7 @@ public class PlayerData {
 
                     case "title_display":
 
-                        state = arg.equalsIgnoreCase("title");
+                        state = arg.equalsIgnoreCase("on");
                         config.set("title-display", state);
                         try {
                             config.save(player_file);

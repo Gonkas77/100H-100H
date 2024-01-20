@@ -77,7 +77,7 @@ public class Settings implements CommandExecutor, TabCompleter {
             if (args.length == 2) {PlayerData.updateFile(player, args);}
             if (args.length == 3) {PlayerData.updateFile(player, args);}
 
-            commandSender.sendMessage("§4[100HP 100H]§a Successfully updated specified setting §2" + args[0] + "§a.");
+            commandSender.sendMessage("§4[100HP 100H]§a Successfully updated specified setting §2" + args[0] + "§a. Relog to see changes!");
         } return true;
     }
 
@@ -101,7 +101,7 @@ public class Settings implements CommandExecutor, TabCompleter {
                     yield Arrays.stream(list1).toList();
                 }
                 case "timer_color" -> {
-                    String[] list2 = {"aqua", "black", "blue", "dark_aqua", "dark_blue", "dark_gray", "dark_green", "dark_purple", "dark_red", "gold", "gray", "green", "light_purple", "red", "yellow", "white"};
+                    String[] list2 = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
                     yield Arrays.stream(list2).toList();
                 }
                 case "timer_text_type" -> {
@@ -119,12 +119,12 @@ public class Settings implements CommandExecutor, TabCompleter {
             return switch (args[0]) {
                 default -> new ArrayList<String>(0);
                 case "timer_color" -> {
-                    String[] list2 = {"aqua", "black", "blue", "dark_aqua", "dark_blue", "dark_gray", "dark_green", "dark_purple", "dark_red", "gold", "gray", "green", "light_purple", "red", "yellow", "white"};
-                    yield Arrays.stream(list2).toList();
+                    String[] list = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
+                    yield Arrays.stream(list).toList();
                 }
                 case "timer_text_type" -> {
-                    String[] list3 = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
-                    yield Arrays.stream(list3).toList();
+                    String[] list1 = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
+                    yield Arrays.stream(list1).toList();
                 }
             };
 
@@ -134,7 +134,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
 
     static boolean isValidColor(String arg) {
-        String[] colors = {"black", "dark_blue", "dark_green", "dark_aqua", "dark_red", "dark_purple", "gold", "gray", "dark_gray", "blue", "green", "aqua", "red", "light_purple", "yellow", "white"};
+        String[] colors = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
         for (String color : colors) {
             if (arg.equals(color)) {return true;}
         } return false;

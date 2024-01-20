@@ -1,5 +1,5 @@
 name: OneHHOneHH
-version: '0.8'
+version: '0.9'
 main: me.gonkas.onehhonehh.OneHHOneHH
 api-version: '1.20'
 authors: [Gonkas77]
@@ -7,7 +7,7 @@ description: "hello"
 commands:
   sethp:
     permission: onehhonehh.admin
-    permission-message: "nuh uh uh"
+    permission-message: "§4Only Admins can run this command!"
   settings:
     permission: onehhonehh.admin
-    permission-message: "nuh uh uh"
+    permission-message: ""
