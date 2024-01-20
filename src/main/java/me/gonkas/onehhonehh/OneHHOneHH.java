@@ -15,7 +15,7 @@ public class OneHHOneHH extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        PLAYERDATAFOLDER = new File(getDataFolder(), "player_data");
+        PLAYERDATAFOLDER = new File("plugins/OneHHOneHH/player_data");
         if (!PLAYERDATAFOLDER.exists()) {PLAYERDATAFOLDER.mkdirs();}
 
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
@@ -24,7 +24,7 @@ public class OneHHOneHH extends JavaPlugin {
 
         CONSOLE = Bukkit.getConsoleSender();
         CONSOLE.sendMessage("");
-        CONSOLE.sendMessage("§aSoareTimer working fr fr");
+        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v0.8 loaded successfully!");
         CONSOLE.sendMessage("");
     }
 }

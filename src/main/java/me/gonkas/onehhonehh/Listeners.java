@@ -1,5 +1,7 @@
 package me.gonkas.onehhonehh;
 
+import me.gonkas.onehhonehh.player.PlayerData;
+import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
@@ -11,10 +13,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import java.io.IOException;
+
 public class Listeners implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
+    public void onLogin(PlayerLoginEvent event) throws IOException {
         Player player = event.getPlayer();
 
         PlayerData.createFile(player);

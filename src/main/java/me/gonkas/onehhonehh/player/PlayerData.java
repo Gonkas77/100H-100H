@@ -1,5 +1,6 @@
-package me.gonkas.onehhonehh;
+package me.gonkas.onehhonehh.player;
 
+import me.gonkas.onehhonehh.OneHHOneHH;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -9,11 +10,10 @@ import java.util.Objects;
 
 public class PlayerData {
 
-    public static void createFile(Player player) {
-        String path = player.getUniqueId() + ".yml";
-        File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, path);
+    public static void createFile(Player player) throws IOException {
+        File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
         if (!player_file.exists()) {
-            player_file.mkdirs();
+            player_file.createNewFile();
 
             YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
             config.set("account-name", player.getName());
@@ -25,7 +25,8 @@ public class PlayerData {
 
         String setting = args[0];
         String arg = args[1];
-        if (args.length == 3) {String arg2 = args[2];}
+        String arg2 = "";
+        if (args.length == 3) {arg2 = args[2];}
 
         if (player_file.exists()) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
@@ -77,7 +78,7 @@ public class PlayerData {
 
                     case "timer_color":
 
-                        config.set("timer-color", arg);
+                        config.set("timer-color", arg + "-" + arg2);
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -87,7 +88,7 @@ public class PlayerData {
 
                     case "timer_text_type":
 
-                        config.set("timer-text-type", arg);
+                        config.set("timer-text-type", arg + "-" + arg2);
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -106,7 +107,7 @@ public class PlayerData {
                         }
                         break;
 
-                    case "title_diplay":
+                    case "title_display":
 
                         state = arg.equalsIgnoreCase("title");
                         config.set("title-display", state);

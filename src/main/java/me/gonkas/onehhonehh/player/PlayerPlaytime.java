@@ -1,4 +1,4 @@
-package me.gonkas.onehhonehh;
+package me.gonkas.onehhonehh.player;
 
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;

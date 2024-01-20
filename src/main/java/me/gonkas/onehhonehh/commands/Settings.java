@@ -1,6 +1,6 @@
 package me.gonkas.onehhonehh.commands;
 
-import me.gonkas.onehhonehh.PlayerData;
+import me.gonkas.onehhonehh.player.PlayerData;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -85,7 +85,7 @@ public class Settings implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (args.length < 2) {
-            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_diplay", "hp_bars_display"};
+            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_display", "hp_bars_display"};
             return Arrays.stream(list).toList();
 
         } else if (args.length == 2) {
