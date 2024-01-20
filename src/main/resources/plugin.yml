@@ -1,0 +1,13 @@
+name: OneHHOneHH
+version: '${project.version}'
+main: me.gonkas.onehhonehh.OneHHOneHH
+api-version: '1.20'
+authors: [Gonkas77]
+description: "hello"
+commands:
+  sethp:
+    permission: onehhonehh.admin
+    permission-message: "nuh uh uh"
+  settings:
+    permission: onehhonehh.admin
+    permission-message: "nuh uh uh"
