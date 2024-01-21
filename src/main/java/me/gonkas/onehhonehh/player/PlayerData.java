@@ -16,9 +16,10 @@ public class PlayerData {
             player_file.createNewFile();
 
             updateFile(player, new String[]{"timer_toggle", "on"});
-            updateFile(player, new String[]{"timer_display", "action_bar"});
+            updateFile(player, new String[]{"timer_display", "action_bar", "white", "segmented_10", "on"});
             updateFile(player, new String[]{"timer_color", "white", "white"});
             updateFile(player, new String[]{"timer_text_type", "normal", "normal"});
+            updateFile(player, new String[]{"timer_time_units", "shortened", "lowercase"});
             updateFile(player, new String[]{"sound_toggle", "on"});
             updateFile(player, new String[]{"title_display", "on"});
             updateFile(player, new String[]{"hp_bars_display", "all"});
@@ -64,6 +65,7 @@ public class PlayerData {
 
                         state = arg.equalsIgnoreCase("on");
                         config.set("timer-toggle", state);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_toggle = state;
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -74,6 +76,7 @@ public class PlayerData {
                     case "timer_display":
 
                         config.set("timer-display", arg);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_display = arg;
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -84,6 +87,7 @@ public class PlayerData {
                     case "timer_color":
 
                         config.set("timer-color", arg + "-" + arg2);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_color = PlayerSettings.colorEncoder(new String[]{arg, arg2});
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -94,6 +98,18 @@ public class PlayerData {
                     case "timer_text_type":
 
                         config.set("timer-text-type", arg + "-" + arg2);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_text_type = PlayerSettings.textTypeEncoder(new String[]{arg, arg2});
+                        try {
+                            config.save(player_file);
+                        } catch (IOException e) {
+                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
+                        }
+                        break;
+
+                    case "timer_time_units":
+
+                        config.set("timer-time-units", arg + "-" + arg2);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_units = PlayerSettings.timeUnitsEncoder(new String[]{arg, arg2});
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -105,6 +121,7 @@ public class PlayerData {
 
                         state = arg.equalsIgnoreCase("on");
                         config.set("sound-toggle", state);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).sound_toggle = state;
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -116,6 +133,7 @@ public class PlayerData {
 
                         state = arg.equalsIgnoreCase("on");
                         config.set("title-display", state);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).title_display = state;
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -125,8 +143,8 @@ public class PlayerData {
 
                     case "hp_bars_display":
 
-                        state = arg.equalsIgnoreCase("all");
-                        config.set("hp_bars_display", state);
+                        config.set("hp-bars-display", arg);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp_bars_display = arg;
                         try {
                             config.save(player_file);
                         } catch (IOException e) {

@@ -64,6 +64,13 @@ public class Settings implements CommandExecutor, TabCompleter {
                         return true;
                     } break;
 
+                case "timer_time_units":
+
+                    if (!(args[1].equalsIgnoreCase("colon") || args[1].equalsIgnoreCase("single_character") || args[1].equalsIgnoreCase("shortened") || args[1].equalsIgnoreCase("full"))) {
+                        commandSender.sendMessage("§4[100HP 100H]§c Setting " + args[0] + " requires syntax <setting> <colon/single_character/shortened/full>!");
+                        return true;
+                    } break;
+
                 case "hp_bars_display":
 
                     if (!(args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("minimized"))) {
@@ -73,11 +80,9 @@ public class Settings implements CommandExecutor, TabCompleter {
             }
 
             Player player = Bukkit.getPlayer(commandSender.getName());
-
-            if (args.length == 2) {PlayerData.updateFile(player, args);}
-            if (args.length == 3) {PlayerData.updateFile(player, args);}
-
+            PlayerData.updateFile(player, args);
             commandSender.sendMessage("§4[100HP 100H]§a Successfully updated specified setting §2" + args[0] + "§a. Relog to see changes!");
+
         } return true;
     }
 
@@ -85,7 +90,7 @@ public class Settings implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (args.length < 2) {
-            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_display", "hp_bars_display"};
+            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_display", "timer_time_units", "hp_bars_display"};
             return Arrays.stream(list).toList();
 
         } else if (args.length == 2) {
@@ -97,20 +102,24 @@ public class Settings implements CommandExecutor, TabCompleter {
                     yield Arrays.stream(list).toList();
                 }
                 case "timer_display" -> {
-                    String[] list1 = {"action_bar", "boss_bar", "scoreboard", "title"};
-                    yield Arrays.stream(list1).toList();
+                    String[] list = {"action_bar", "boss_bar", "scoreboard", "title"};
+                    yield Arrays.stream(list).toList();
                 }
                 case "timer_color" -> {
-                    String[] list2 = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
-                    yield Arrays.stream(list2).toList();
+                    String[] list = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
+                    yield Arrays.stream(list).toList();
                 }
                 case "timer_text_type" -> {
-                    String[] list3 = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
-                    yield Arrays.stream(list3).toList();
+                    String[] list = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
+                    yield Arrays.stream(list).toList();
+                }
+                case "timer_time_units" -> {
+                    String[] list = {"colon", "single_character", "shortened", "full"};
+                    yield Arrays.stream(list).toList();
                 }
                 case "hp_bars_display" -> {
-                    String[] list4 = {"all", "minimized"};
-                    yield Arrays.stream(list4).toList();
+                    String[] list = {"all", "minimized"};
+                    yield Arrays.stream(list).toList();
                 }
             };
 
@@ -118,15 +127,45 @@ public class Settings implements CommandExecutor, TabCompleter {
 
             return switch (args[0]) {
                 default -> new ArrayList<String>(0);
+                case "timer_display" -> {
+                    String[] list = {"blue", "green", "pink", "purple", "red", "white", "yellow"};
+                    yield Arrays.stream(list).toList();
+                }
                 case "timer_color" -> {
                     String[] list = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
                     yield Arrays.stream(list).toList();
                 }
                 case "timer_text_type" -> {
-                    String[] list1 = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
-                    yield Arrays.stream(list1).toList();
+                    String[] list = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
+                    yield Arrays.stream(list).toList();
+                }
+                case "timer_time_units" -> {
+                    if (!(args[1].equals("colon"))) {
+                        String[] list = {"uppercase", "lowercase"};
+                        yield Arrays.stream(list).toList();
+                    } else {yield Arrays.stream(new String[0]).toList();}
                 }
             };
+
+        } else if (args.length == 4) {
+
+            if (args[0].equals("timer_display") && args[1].equals("action_bar")) {
+                String[] list = {"solid", "segmented_6", "segmented_10", "segmented_12", "segmented_20"};
+                return Arrays.stream(list).toList();
+
+            } else if (args[0].equals("timer_time_units") && !(args[1].equals("colon"))) {
+                String[] list = {"spaced", "together"};
+                return Arrays.stream(list).toList();
+
+            } else {return new ArrayList<String>(0);}
+
+        } else if (args.length == 5) {
+
+            if (args[0].equals("timer_display") && args[1].equals("action_bar")) {
+                String[] list = {"on", "off"};
+                return Arrays.stream(list).toList();
+
+            } else {return new ArrayList<String>(0);}
 
         } else {return new ArrayList<String>(0);}
     }

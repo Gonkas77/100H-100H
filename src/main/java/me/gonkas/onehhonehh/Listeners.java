@@ -25,7 +25,7 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
 
         PlayerData.createFile(player);
-        OneHHOneHH.PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player));
+        OneHHOneHH.PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));
 
         if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) == 0) {
 

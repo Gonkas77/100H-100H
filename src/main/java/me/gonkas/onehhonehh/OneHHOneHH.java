@@ -12,16 +12,16 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class OneHHOneHH extends JavaPlugin {
 
     public static File PLAYERDATAFOLDER;
-    public static Map<UUID, PlayerSettings> PLAYERSETTINGS;
+    public static HashMap<UUID, PlayerSettings> PLAYERSETTINGS;
     public static ConsoleCommandSender CONSOLE;
 
-    public static BossBar BOSSBAR;
+    public static HashMap<Player, BossBar> BOSSBAR;
     public static ScoreboardManager SCOREBOARDMANAGER;
     public static Scoreboard MAINSCOREBOARD;
 
@@ -30,7 +30,9 @@ public class OneHHOneHH extends JavaPlugin {
 
         PLAYERDATAFOLDER = new File("plugins/OneHHOneHH/player_data");
         if (!PLAYERDATAFOLDER.exists()) {PLAYERDATAFOLDER.mkdirs();}
-        PLAYERSETTINGS = new 
+        PLAYERSETTINGS = new HashMap<UUID, PlayerSettings>();
+
+        antiReload(); // makes sure that even after /reload plugin settings work properly
 
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
         getCommand("sethp").setExecutor(new SetHP());
@@ -38,6 +40,7 @@ public class OneHHOneHH extends JavaPlugin {
 
         SCOREBOARDMANAGER = Bukkit.getScoreboardManager();
         MAINSCOREBOARD = SCOREBOARDMANAGER.getMainScoreboard();
+        BOSSBAR = new HashMap<Player, BossBar>();
 
         CONSOLE = Bukkit.getConsoleSender();
         CONSOLE.sendMessage("");
@@ -58,4 +61,19 @@ public class OneHHOneHH extends JavaPlugin {
             }
         }, 0, 20);
     }
+
+    @Override
+    public void onDisable() { // deletes old boss bars to prevent accumulation on /reload
+        for (Player player : Bukkit.getOnlinePlayers()) {BOSSBAR.get(player).removePlayer(player);}
+    }
+
+    public void antiReload() {
+        for (Player player : Bukkit.getOnlinePlayers()) {PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));}
+    }
 }
+
+// fix hp bars display
+// finish boss bar configuration (and command)
+// finish polishing timer text
+// add a /help command or /syntax
+// add a /setdefaults command

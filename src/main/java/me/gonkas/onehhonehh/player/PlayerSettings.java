@@ -2,9 +2,9 @@ package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.UUID;
 
 public class PlayerSettings {
 
@@ -17,9 +17,10 @@ public class PlayerSettings {
 
     String[] timer_color;
     String[] timer_text_type;
+    String[] timer_time_units;
 
-    public PlayerSettings(Player player) {
-        File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
+    public PlayerSettings(UUID uuid) {
+        File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, uuid + ".yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
         timer_toggle = config.getBoolean("timer-toggle");
@@ -31,18 +32,39 @@ public class PlayerSettings {
 
         timer_color = colorEncoder(config.getString("timer-color").split("-"));
         timer_text_type = textTypeEncoder(config.getString("timer-text-type").split("-"));
+        timer_time_units = timeUnitsEncoder(config.getString("timer-time-units").split("-"));
     }
 
-    String[][] settingsSplitter(String[] array) {
-        String[] temp1 = array[0].split("_");
-        String[] temp2 = array[1].split("_");
-        return new String[][]{temp1, temp2};
+    static String[][] settingsSplitter(String[] array) {
+        String[][] result = new String[array.length][3];
+        for (int i=0; i < array.length; i++) {result[i] = array[i].split("_");}
+        return result;
     }
 
-    String[] textTypeEncoder(String[] array) {
+    public static String[] timeUnitsEncoder(String[] array) {
+        if (array[1].equalsIgnoreCase("lowercase")) {
+            return switch (array[0]) {
+                default -> new String[0];
+                case "colon" -> new String[]{":", ":", ":"};
+                case "single_character" -> new String[]{"h", "m", "s"};
+                case "shortened" -> new String[]{"h", "min", "s"};
+                case "full" -> new String[]{"hours", "minutes", "seconds"};
+            };
+        } else {
+            return switch (array[0]) {
+                default -> new String[0];
+                case "colon" -> new String[]{":", ":", ":"};
+                case "single_character" -> new String[]{"H", "M", "S"};
+                case "shortened" -> new String[]{"H", "MIN", "S"};
+                case "full" -> new String[]{"HOURS", "MINUTES", "SECONDS"};
+            };
+        }
+    }
+
+    public static String[] textTypeEncoder(String[] array) {
 
         String[][] text = settingsSplitter(array);
-        String[] result = new String[text.length];
+        String[] result = {"", ""};
 
         for (int i=0; i < text.length; i++) {
             for (String setting : text[i]) {
@@ -64,7 +86,7 @@ public class PlayerSettings {
         } return result;
     }
 
-    String[] colorEncoder(String[] array) {
+    public static String[] colorEncoder(String[] array) {
 
         String[] result = new String[array.length];
 
@@ -129,4 +151,5 @@ public class PlayerSettings {
     public String getHPBarsDisplay() {return hp_bars_display;}
     public String[] getTimerColor() {return timer_color;}
     public String[] getTimerTextType() {return timer_text_type;}
+    public String[] getTimerTimeUnits() {return timer_time_units;}
 }
