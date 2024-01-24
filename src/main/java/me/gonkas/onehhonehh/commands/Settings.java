@@ -1,5 +1,6 @@
 package me.gonkas.onehhonehh.commands;
 
+import me.gonkas.onehhonehh.OneHHOneHH;
 import me.gonkas.onehhonehh.player.PlayerData;
 
 import org.bukkit.Bukkit;
@@ -11,16 +12,19 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static me.gonkas.onehhonehh.player.PlayerData.updateFile;
 
 public class Settings implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (commandSender instanceof Player) {
-            if (args.length < 2) {
+            if (args.length < 2 && !(args.length == 1 && args[0].equals("reset"))) {
                 commandSender.sendMessage("§4[100HP 100H]§c Command <settings> requires arguments <setting> <value> OR <setting> <value> <value>!");
                 return true;
             }
@@ -36,7 +40,17 @@ public class Settings implements CommandExecutor, TabCompleter {
                     commandSender.sendMessage("§4[100HP 100H]§c Invalid setting.");
                     return true;
 
-                case "timer_toggle", "sound_toggle", "title_display":
+                case "reset":
+
+                    if (args.length < 2) {
+                        commandSender.sendMessage("§4[100HP 100H]§c Are you SURE you want to reset your settings?");
+                        commandSender.sendMessage("§4[100HP 100H]§c Run the command §\"/settings reset confirm\"§c to confirm.");
+                    } else {
+                        commandSender.sendMessage("§4[100HP 100H]§a Settings reset to default successfully.");
+                        PlayerData.setDefaults((Player) commandSender, new File(OneHHOneHH.PLAYERDATAFOLDER, ((Player) commandSender).getUniqueId() + ".yml"));
+                    } return true;
+
+                case "timer_toggle", "sound_toggle", "title_toggle":
 
                     if (!(args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off"))) {
                         commandSender.sendMessage("§4[100HP 100H]§c Setting " + args[0] + " requires syntax <setting> <on/off>!");
@@ -80,7 +94,7 @@ public class Settings implements CommandExecutor, TabCompleter {
             }
 
             Player player = Bukkit.getPlayer(commandSender.getName());
-            PlayerData.updateFile(player, args);
+            updateFile(player, args);
             commandSender.sendMessage("§4[100HP 100H]§a Successfully updated specified setting §2" + args[0] + "§a. Relog to see changes!");
 
         } return true;
@@ -90,14 +104,14 @@ public class Settings implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (args.length < 2) {
-            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_display", "timer_time_units", "hp_bars_display"};
+            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_toggle", "timer_time_units", "hp_bars_display", "reset"};
             return Arrays.stream(list).toList();
 
         } else if (args.length == 2) {
 
             return switch (args[0]) {
                 default -> new ArrayList<String>(0);
-                case "timer_toggle", "sound_toggle", "title_display" -> {
+                case "timer_toggle", "sound_toggle", "title_toggle" -> {
                     String[] list = {"on", "off"};
                     yield Arrays.stream(list).toList();
                 }
@@ -139,22 +153,12 @@ public class Settings implements CommandExecutor, TabCompleter {
                     String[] list = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
                     yield Arrays.stream(list).toList();
                 }
-                case "timer_time_units" -> {
-                    if (!(args[1].equals("colon"))) {
-                        String[] list = {"uppercase", "lowercase"};
-                        yield Arrays.stream(list).toList();
-                    } else {yield Arrays.stream(new String[0]).toList();}
-                }
             };
 
         } else if (args.length == 4) {
 
             if (args[0].equals("timer_display") && args[1].equals("action_bar")) {
                 String[] list = {"solid", "segmented_6", "segmented_10", "segmented_12", "segmented_20"};
-                return Arrays.stream(list).toList();
-
-            } else if (args[0].equals("timer_time_units") && !(args[1].equals("colon"))) {
-                String[] list = {"spaced", "together"};
                 return Arrays.stream(list).toList();
 
             } else {return new ArrayList<String>(0);}

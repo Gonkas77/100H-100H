@@ -1,5 +1,6 @@
 package me.gonkas.onehhonehh.commands;
 
+import me.gonkas.onehhonehh.OneHHOneHH;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -17,30 +18,31 @@ public class SetHP implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (commandSender instanceof Player) {
-            if (args.length < 2) {
-                commandSender.sendMessage("§4[100HP 100H]§c Command <sethp> requires arguments <player> <value>!");
-                return true;
-            }
+        if (args.length < 2) {
+            commandSender.sendMessage("§4[100HP 100H]§c Command <sethp> requires arguments <player> <value>!");
+            return true;
+        }
 
-            if (Double.parseDouble(args[1]) > 2048) {
-                commandSender.sendMessage("§4[100HP 100H]§c The maximum HP value is 2048!");
-                return true;
-            }
+        if (Double.parseDouble(args[1]) > 2048) {
+            commandSender.sendMessage("§4[100HP 100H]§c The maximum HP value is 2048!");
+            return true;
+        }
 
-            Player target = Bukkit.getPlayer(args[0]);
-            double hp = Double.parseDouble(args[1]);
+        Player target = Bukkit.getPlayer(args[0]);
+        double hp = Double.parseDouble(args[1]);
 
-            if (target == null) {
-                commandSender.sendMessage("§4[100HP 100H]§c Player not found.");
-                return true;
-            }
+        if (target == null) {
+            commandSender.sendMessage("§4[100HP 100H]§c Player not found.");
+            return true;
+        }
 
-            target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
-            target.setHealth(hp);
+        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
+        target.setHealth(hp);
 
-            commandSender.sendMessage("§4[100HP 100H]§a Successfully set §2" + commandSender.getName() + "§a's HP to §2" + hp + "§a.");
-        } return true;
+        OneHHOneHH.PLAYERSETTINGS.get(target.getUniqueId()).max_hp = target.getHealth();
+
+        commandSender.sendMessage("§4[100HP 100H]§a Successfully set §2" + commandSender.getName() + "§a's HP to §2" + hp + "§a.");
+        return true;
     }
 
     @Override

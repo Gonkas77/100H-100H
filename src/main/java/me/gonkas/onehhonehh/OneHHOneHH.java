@@ -4,7 +4,11 @@ import me.gonkas.onehhonehh.commands.*;
 import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import me.gonkas.onehhonehh.player.PlayerSettings;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.ConsoleCommandSender;
@@ -44,27 +48,40 @@ public class OneHHOneHH extends JavaPlugin {
 
         CONSOLE = Bukkit.getConsoleSender();
         CONSOLE.sendMessage("");
-        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v0.9 loaded successfully!");
+        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v1.0 loaded successfully!");
         CONSOLE.sendMessage("");
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
+
                 PlayerPlaytime.displayTimer(player);
                 if (PLAYERSETTINGS.get(player.getUniqueId()).getHPBarsDisplay().equals("minimized")) {
                     player.sendHealthUpdate(
-                            20 + (player.getHealth() % 20),
+                            PLAYERSETTINGS.get(player.getUniqueId()).getMaxHP() % 20 + 20,
                             player.getFoodLevel(),
                             player.getSaturation()
                     );
-                    // add more settings to action bar and timer text
+                }
+
+                if (PLAYERSETTINGS.get(player.getUniqueId()).getSoundToggle()) {
+                    if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) % 72000 == 0) {
+                        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 100f, 1.2f);
+                    }
                 }
             }
         }, 0, 20);
     }
 
     @Override
-    public void onDisable() { // deletes old boss bars to prevent accumulation on /reload
-        for (Player player : Bukkit.getOnlinePlayers()) {BOSSBAR.get(player).removePlayer(player);}
+    public void onDisable() { // deletes old boss bars to prevent accumulation on /reload + update max_hp on player data file
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            BOSSBAR.get(player).removePlayer(player);
+
+            File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
+
+            config.set("max-hp", PLAYERSETTINGS.get(player.getUniqueId()).getMaxHP());
+        }
     }
 
     public void antiReload() {
@@ -72,8 +89,4 @@ public class OneHHOneHH extends JavaPlugin {
     }
 }
 
-// fix hp bars display
-// finish boss bar configuration (and command)
-// finish polishing timer text
-// add a /help command or /syntax
-// add a /setdefaults command
+// config file

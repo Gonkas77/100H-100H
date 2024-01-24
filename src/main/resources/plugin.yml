@@ -3,11 +3,14 @@ version: '${project.version}'
 main: me.gonkas.onehhonehh.OneHHOneHH
 api-version: '1.20'
 authors: [Gonkas77]
-description: "hello"
+description: "100 Hearts 100 Hours plugin. Essentially your objective is to survive 100 Hours before you lose 100 Hearts of damage."
 commands:
   sethp:
     permission: onehhonehh.admin
     permission-message: "§4Only Admins can run this command!"
   settings:
-    permission: onehhonehh.admin
-    permission-message: ""
+    default: true
+  gethp:
+    default: true
+  syntax:
+    default: true

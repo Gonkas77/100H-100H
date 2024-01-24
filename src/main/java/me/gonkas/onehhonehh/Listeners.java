@@ -50,10 +50,11 @@ public class Listeners implements Listener {
 
         // console logs
         OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r took §4" + event.getFinalDamage() + "§r damage.");
-        OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been updated.");
+        OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been updated to §4" + (player.getHealth() - event.getFinalDamage()) + "§r.");
         // -----------
 
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getHealth() - event.getFinalDamage());
+        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).max_hp = player.getHealth();
     }
 
     @EventHandler
@@ -62,15 +63,19 @@ public class Listeners implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
 
             // console logs
-            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + event.getPlayer().getName() + "§4 has died!§r They survived " + PlayerPlaytime.getPlaytime(event.getPlayer()) + ".");
+            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + event.getPlayer().getName() + "§4 has died!§r They survived for " + PlayerPlaytime.getPlaytime(event.getPlayer()) + ".");
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Death title and subtitle displayed to everyone online.");
             // -----------
 
             PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-            if (settings.getTitleDisplay()) {
+            if (settings.getTitleToggle()) {
                 player.sendTitle("§c" + event.getPlayer().getName(), "survived " + PlayerPlaytime.getPlaytime(event.getPlayer()) + "!", 10, 80, 10);
             }
+
+            player.sendMessage("");
+            player.sendMessage("§c" + event.getPlayer().getName() + "§r survived " + PlayerPlaytime.getPlaytime(event.getPlayer()) + "!");
+            player.sendMessage("");
 
             if (settings.getSoundToggle()) {
                 player.playSound(player, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 100f, 1.2f);

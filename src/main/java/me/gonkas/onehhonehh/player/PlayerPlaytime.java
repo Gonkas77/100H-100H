@@ -18,14 +18,14 @@ public class PlayerPlaytime {
 
         PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-        return hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + seconds + settings.getTimerTimeUnits()[2];
+        if (settings.getTimerDisplay().equals("colon")) {
+            return hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + seconds;
+        } else {
+            return hours + settings.getTimerTimeUnits()[0] + " " + minutes + settings.getTimerTimeUnits()[1] + " " + seconds + settings.getTimerTimeUnits()[2];
+        }
     }
 
-    public static double getHours(Player player) {
-        return (double) player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20 / 3600;
-    }
-
-    public static String resetEverySecond(Player player) {
+    public static String resetOldTimer(Player player, String time) {
         int playtimeInSeconds = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20; // Convert from ticks to seconds
         int seconds = playtimeInSeconds % 60;
         int minutes = (playtimeInSeconds / 60) % 60;
@@ -33,28 +33,21 @@ public class PlayerPlaytime {
 
         PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-        return hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + (seconds-1) + settings.getTimerTimeUnits()[2];
+        return switch (time) {
+            case "hours" ->
+                    hours + settings.getTimerTimeUnits()[0] + 59 + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
+            case "minutes" ->
+                    hours + settings.getTimerTimeUnits()[0] + (minutes - 1) + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
+            case "seconds" ->
+                    hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + (seconds - 1) + settings.getTimerTimeUnits()[2];
+            default ->
+                    "";
+        };
     }
 
-    public static String resetEveryMinute(Player player) {
-        int playtimeInSeconds = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20; // Convert from ticks to seconds
-        int minutes = (playtimeInSeconds / 60) % 60;
-        int hours = playtimeInSeconds / 3600;
-
-        PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
-
-        return hours + settings.getTimerTimeUnits()[0] + (minutes-1) + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
+    public static double getHours(Player player) {
+        return (double) player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20 / 3600;
     }
-
-    public static String resetEveryHour(Player player) {
-        int playtimeInSeconds = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20; // Convert from ticks to seconds
-        int hours = playtimeInSeconds / 3600;
-
-        PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
-
-        return hours + settings.getTimerTimeUnits()[0] + 59 + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
-    }
-
 
 
     public static void displayTimer(Player player) {
@@ -77,9 +70,17 @@ public class PlayerPlaytime {
                     break;
 
                 case "boss_bar":
-                    if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}
-                    OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + "Playtime: §r" + timer_type + timer_color + getPlaytime(player), BarColor.RED, BarStyle.SOLID));
-                    OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);
+
+                    BarColor bar_color = settings.getTimerBossbarColor();
+                    BarStyle bar_style = settings.getTimerBossbarStyle();
+
+                    if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);} // -> removes player from old bossbar
+                    OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + "Playtime: §r" + timer_type + timer_color + getPlaytime(player), bar_color, bar_style));
+
+                    // boss bar progress/not
+                    if (settings.getTimerBossbarProgression()) {OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);}
+                    else {OneHHOneHH.BOSSBAR.get(player).setProgress(100);}
+
                     OneHHOneHH.BOSSBAR.get(player).addPlayer(player);
                     break;
 
@@ -94,9 +95,9 @@ public class PlayerPlaytime {
                     Score score = objective.getScore(timer_type + timer_color + getPlaytime(player));
                     score.setScore(0);
 
-                    objective.getScore(timer_type + timer_color + resetEverySecond(player)).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetEveryMinute(player)).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetEveryHour(player)).resetScore(); // reset old
+                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
+                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
+                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
                     break;
 
                 case "title":
