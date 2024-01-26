@@ -37,8 +37,17 @@ public class SetHP implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
-        target.setHealth(hp);
+        if (hp > 0) {
+            if (OneHHOneHH.PLAYERSETTINGS.get(target.getUniqueId()).getHPBarsDisplay().equals("minimized")) {
+                target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
+                target.setHealth(hp / 5);
+            } else {
+                target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
+                target.setHealth(hp);
+            }
+        } else {
+            target.setHealth(0);
+        }
 
         PlayerData.updateFile(target, new String[]{"hp", String.valueOf(hp)});
 

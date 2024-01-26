@@ -2,8 +2,6 @@ package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -103,6 +101,10 @@ public class PlayerData {
                         state = arg.equalsIgnoreCase("on");
                         config.set("timer-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_toggle = state;
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -113,16 +115,28 @@ public class PlayerData {
                     case "timer_display":
 
                         config.set("timer-display.display", arg);
+
+                        if (arg2.isBlank()) {arg2 = "white";}
+                        if (arg3.isBlank()) {arg3 = "solid";}
+
                         config.set("timer-display.boss-bar.color", arg2);
                         config.set("timer-display.boss-bar.style", arg3);
 
-                        state = arg4.equalsIgnoreCase("on");
+                        if (arg4.isBlank()) {state = true;}
+                        else {state = arg4.equalsIgnoreCase("on");}
+
                         config.set("timer-display.boss-bar.progression", state);
 
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_display = arg;
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_bossbar_color = PlayerSettings.BossBarColor(arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_bossbar_style = PlayerSettings.BossBarStyle(arg3);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_bossbar_progression = state;
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
+                        try {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}
+                        catch (NullPointerException ignored) {}
 
                         try {
                             config.save(player_file);
@@ -135,6 +149,10 @@ public class PlayerData {
 
                         config.set("timer-color", arg + "-" + arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_color = PlayerSettings.colorEncoder(new String[]{arg, arg2});
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -146,6 +164,10 @@ public class PlayerData {
 
                         config.set("timer-text-type", arg + "-" + arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_text_type = PlayerSettings.textTypeEncoder(new String[]{arg, arg2});
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -157,6 +179,10 @@ public class PlayerData {
 
                         config.set("timer-time-units", arg);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_units = PlayerSettings.timeUnitsEncoder(arg);
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
                         try {
                             config.save(player_file);
                         } catch (IOException e) {
@@ -193,7 +219,13 @@ public class PlayerData {
                         config.set("hp-bars-display", arg);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp_bars_display = arg;
 
-                        player.sendHealthUpdate();
+                        if (arg.equals("minimized")) {
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
+                            player.setHealth(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP() / 5);
+                        } else {
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP());
+                            player.setHealth(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP());
+                        }
 
                         try {
                             config.save(player_file);

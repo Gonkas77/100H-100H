@@ -47,7 +47,17 @@ public class Settings implements CommandExecutor, TabCompleter {
                         commandSender.sendMessage("§4[100HP 100H]§c Run the command §\"/settings reset confirm\"§c to confirm.");
                     } else {
                         commandSender.sendMessage("§4[100HP 100H]§a Settings reset to default successfully.");
-                        PlayerData.setDefaults((Player) commandSender, new File(OneHHOneHH.PLAYERDATAFOLDER, ((Player) commandSender).getUniqueId() + ".yml"));
+
+                        Player player = ((Player) commandSender).getPlayer();
+
+                        PlayerData.setDefaults(player, new File(OneHHOneHH.PLAYERDATAFOLDER, (player.getUniqueId() + ".yml")));
+
+                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(commandSender.getName() + "_timer").unregister();}
+                        catch (NullPointerException ignored) {}
+
+                        try {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}
+                        catch (NullPointerException ignored) {}
+
                     } return true;
 
                 case "timer_toggle", "sound_toggle", "title_toggle":
@@ -95,7 +105,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
             Player player = Bukkit.getPlayer(commandSender.getName());
             updateFile(player, args);
-            commandSender.sendMessage("§4[100HP 100H]§a Successfully updated specified setting §2" + args[0] + "§a. Relog to see changes!");
+            commandSender.sendMessage("§4[100HP 100H]§a Successfully updated setting §2" + args[0] + "§a.");
 
         } return true;
     }
@@ -142,8 +152,10 @@ public class Settings implements CommandExecutor, TabCompleter {
             return switch (args[0]) {
                 default -> new ArrayList<String>(0);
                 case "timer_display" -> {
-                    String[] list = {"blue", "green", "pink", "purple", "red", "white", "yellow"};
-                    yield Arrays.stream(list).toList();
+                    if (args[1].equals("boss_bar")) {
+                        String[] list = {"blue", "green", "pink", "purple", "red", "white", "yellow"};
+                        yield Arrays.stream(list).toList();
+                    } else {yield new ArrayList<>(0);}
                 }
                 case "timer_color" -> {
                     String[] list = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
@@ -157,7 +169,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
         } else if (args.length == 4) {
 
-            if (args[0].equals("timer_display") && args[1].equals("action_bar")) {
+            if (args[0].equals("timer_display") && args[1].equals("boss_bar")) {
                 String[] list = {"solid", "segmented_6", "segmented_10", "segmented_12", "segmented_20"};
                 return Arrays.stream(list).toList();
 
@@ -165,7 +177,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
         } else if (args.length == 5) {
 
-            if (args[0].equals("timer_display") && args[1].equals("action_bar")) {
+            if (args[0].equals("timer_display") && args[1].equals("boss_bar")) {
                 String[] list = {"on", "off"};
                 return Arrays.stream(list).toList();
 

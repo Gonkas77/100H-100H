@@ -22,6 +22,7 @@ public class PlayerSettings {
     String[] timer_color;
     String[] timer_text_type;
     String[] timer_time_units;
+    String timer_time_unit_type;
 
     BarColor timer_bossbar_color;
     BarStyle timer_bossbar_style;
@@ -43,6 +44,7 @@ public class PlayerSettings {
         timer_color = colorEncoder(config.getString("timer-color").split("-"));
         timer_text_type = textTypeEncoder(config.getString("timer-text-type").split("-"));
         timer_time_units = timeUnitsEncoder(config.getString("timer-time-units"));
+        timer_time_unit_type = config.getString("timer-time-units");
 
         timer_bossbar_color = BossBarColor(config.getString("timer-display.boss-bar.color"));
         timer_bossbar_style = BossBarStyle(config.getString("timer-display.boss-bar.style"));
@@ -179,6 +181,7 @@ public class PlayerSettings {
     public String[] getTimerColor() {return timer_color;}
     public String[] getTimerTextType() {return timer_text_type;}
     public String[] getTimerTimeUnits() {return timer_time_units;}
+    public String getTimerTimeUnitsType() {return timer_time_unit_type;}
 
     public BarColor getTimerBossbarColor() {return timer_bossbar_color;}
     public BarStyle getTimerBossbarStyle() {return timer_bossbar_style;}

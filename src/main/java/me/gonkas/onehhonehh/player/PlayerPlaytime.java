@@ -18,10 +18,19 @@ public class PlayerPlaytime {
 
         PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-        if (settings.getTimerDisplay().equals("colon")) {
-            return hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + seconds;
+        String sec = "";
+        String min = "";
+
+        if (seconds < 10) {sec = "0" + seconds;}
+        else {sec = String.valueOf(seconds);}
+
+        if (minutes < 10) {min = "0" + minutes;}
+        else {min = String.valueOf(minutes);}
+
+        if (settings.getTimerTimeUnitsType().equals("colon")) {
+            return hours + settings.getTimerTimeUnits()[0] + min + settings.getTimerTimeUnits()[1] + sec;
         } else {
-            return hours + settings.getTimerTimeUnits()[0] + " " + minutes + settings.getTimerTimeUnits()[1] + " " + seconds + settings.getTimerTimeUnits()[2];
+            return hours + settings.getTimerTimeUnits()[0] + " " + min + settings.getTimerTimeUnits()[1] + " " + sec + settings.getTimerTimeUnits()[2];
         }
     }
 
@@ -33,15 +42,40 @@ public class PlayerPlaytime {
 
         PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-        return switch (time) {
-            case "hours" ->
-                    hours + settings.getTimerTimeUnits()[0] + 59 + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
-            case "minutes" ->
-                    hours + settings.getTimerTimeUnits()[0] + (minutes - 1) + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
-            case "seconds" ->
-                    hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + (seconds - 1) + settings.getTimerTimeUnits()[2];
-            default -> "";
-        };
+        String sec = "";
+        String min = "";
+        String minMinusOne = "";
+
+        if (seconds <= 10) {sec = "0" + (seconds - 1);}
+        else {sec = String.valueOf(seconds - 1);}
+
+        if (minutes < 10) {min = "0" + minutes;}
+        else {min = String.valueOf(minutes);}
+
+        if (minutes <= 10) {minMinusOne = "0" + (minutes - 1);}
+        else {minMinusOne = String.valueOf(minutes - 1);}
+
+        if (settings.getTimerTimeUnitsType().equals("colon")) {
+            return switch (time) {
+                case "hours" ->
+                        hours + settings.getTimerTimeUnits()[0] + 59 + settings.getTimerTimeUnits()[1] + 59;
+                case "minutes" ->
+                        hours + settings.getTimerTimeUnits()[0] + minMinusOne + settings.getTimerTimeUnits()[1] + 59;
+                case "seconds" ->
+                        hours + settings.getTimerTimeUnits()[0] + min + settings.getTimerTimeUnits()[1] + sec;
+                default -> "";
+            };
+        } else {
+            return switch (time) {
+                case "hours" ->
+                        hours + settings.getTimerTimeUnits()[0] + " " + 59 + settings.getTimerTimeUnits()[1] + " " + 59 + settings.getTimerTimeUnits()[2];
+                case "minutes" ->
+                        hours + settings.getTimerTimeUnits()[0] + " " + minMinusOne + settings.getTimerTimeUnits()[1] + " " + 59 + settings.getTimerTimeUnits()[2];
+                case "seconds" ->
+                        hours + settings.getTimerTimeUnits()[0] + " " + min + settings.getTimerTimeUnits()[1] + " " + sec + settings.getTimerTimeUnits()[2];
+                default -> "";
+            };
+        }
     }
 
     public static double getHours(Player player) {
@@ -56,10 +90,6 @@ public class PlayerPlaytime {
         String playtime_type = settings.getTimerTextType()[0];
         String timer_color = settings.getTimerColor()[1];
         String timer_type = settings.getTimerTextType()[1];
-
-        if (!(settings.getTimerDisplay().equals("scoreboard")) && (OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer") != null)) {
-            OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();
-        }
 
         if (settings.getTimerToggle()) {
             switch (settings.getTimerDisplay()) {
