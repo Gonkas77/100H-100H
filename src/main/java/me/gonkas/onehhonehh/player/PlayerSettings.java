@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class PlayerSettings {
 
-    public double max_hp;
+    public double hp;
 
     boolean timer_toggle;
     boolean sound_toggle;
@@ -31,7 +31,7 @@ public class PlayerSettings {
         File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, uuid + ".yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
-        max_hp = config.getDouble("max-hp");
+        hp = config.getDouble("hp");
 
         timer_toggle = config.getBoolean("timer-toggle");
         sound_toggle = config.getBoolean("sound-toggle");
@@ -170,7 +170,7 @@ public class PlayerSettings {
         };
     }
 
-    public double getMaxHP() {return max_hp;}
+    public double getHP() {return hp;}
     public boolean getTimerToggle() {return timer_toggle;}
     public boolean getSoundToggle() {return sound_toggle;}
     public boolean getTitleToggle() {return title_toggle;}

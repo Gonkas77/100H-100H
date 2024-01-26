@@ -40,8 +40,7 @@ public class PlayerPlaytime {
                     hours + settings.getTimerTimeUnits()[0] + (minutes - 1) + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
             case "seconds" ->
                     hours + settings.getTimerTimeUnits()[0] + minutes + settings.getTimerTimeUnits()[1] + (seconds - 1) + settings.getTimerTimeUnits()[2];
-            default ->
-                    "";
+            default -> "";
         };
     }
 

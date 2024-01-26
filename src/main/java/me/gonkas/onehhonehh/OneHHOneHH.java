@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh;
 
 import me.gonkas.onehhonehh.commands.*;
+import me.gonkas.onehhonehh.player.PlayerData;
 import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import me.gonkas.onehhonehh.player.PlayerSettings;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -39,7 +41,9 @@ public class OneHHOneHH extends JavaPlugin {
         antiReload(); // makes sure that even after /reload plugin settings work properly
 
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
+        getCommand("gethp").setExecutor(new GetHP());
         getCommand("sethp").setExecutor(new SetHP());
+        getCommand("syntax").setExecutor(new Syntax());
         getCommand("settings").setExecutor(new Settings());
 
         SCOREBOARDMANAGER = Bukkit.getScoreboardManager();
@@ -53,16 +57,7 @@ public class OneHHOneHH extends JavaPlugin {
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-
                 PlayerPlaytime.displayTimer(player);
-                if (PLAYERSETTINGS.get(player.getUniqueId()).getHPBarsDisplay().equals("minimized")) {
-                    player.sendHealthUpdate(
-                            PLAYERSETTINGS.get(player.getUniqueId()).getMaxHP() % 20 + 20,
-                            player.getFoodLevel(),
-                            player.getSaturation()
-                    );
-                }
-
                 if (PLAYERSETTINGS.get(player.getUniqueId()).getSoundToggle()) {
                     if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) % 72000 == 0) {
                         player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 100f, 1.2f);
@@ -73,14 +68,14 @@ public class OneHHOneHH extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() { // deletes old boss bars to prevent accumulation on /reload + update max_hp on player data file
+    public void onDisable() { // update max_hp on player data file
         for (Player player : Bukkit.getOnlinePlayers()) {
-            BOSSBAR.get(player).removePlayer(player);
-
             File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
             YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
-            config.set("max-hp", PLAYERSETTINGS.get(player.getUniqueId()).getMaxHP());
+            config.set("hp", PLAYERSETTINGS.get(player.getUniqueId()).getHP());
+            try {config.save(player_file);}
+            catch (IOException e) {PlayerData.log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
         }
     }
 

@@ -5,6 +5,7 @@ import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import me.gonkas.onehhonehh.player.PlayerSettings;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
@@ -14,31 +15,30 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class Listeners implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) throws IOException {
+    public void onPlayerJoin(PlayerJoinEvent event) throws IOException {
         Player player = event.getPlayer();
 
         PlayerData.createFile(player);
         OneHHOneHH.PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));
+    }
 
-        if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) == 0) {
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
 
-            // console logs
-            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r joined for the first time!");
-            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been set to 200.");
-            // -----------
-
-            // actual logic
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(200);
-            player.setHealth(200);
-
-        }
+        PlayerData.updateFile(player, new String[]{"hp", String.valueOf(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP())});
+        OneHHOneHH.PLAYERSETTINGS.remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -53,8 +53,30 @@ public class Listeners implements Listener {
         OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been updated to §4" + (player.getHealth() - event.getFinalDamage()) + "§r.");
         // -----------
 
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getHealth() - event.getFinalDamage());
-        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).max_hp = player.getHealth();
+        PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
+
+        settings.hp -= event.getFinalDamage() + 0.1;
+        double hp = settings.hp;
+
+        event.setDamage(0.1);
+
+        if (hp > 0) {
+            if (settings.getHPBarsDisplay().equals("minimized")) {
+
+                double value;
+                if (hp % 20 == 0) {value = 40;}
+                else {value = hp % 20 + 20;}
+
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(value);
+                player.setHealth(value);
+
+            } else {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
+                player.setHealth(hp);
+            }
+        } else {
+            player.setHealth(0);
+        }
     }
 
     @EventHandler

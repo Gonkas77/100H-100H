@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh.commands;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
+import me.gonkas.onehhonehh.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -39,7 +40,7 @@ public class SetHP implements CommandExecutor, TabCompleter {
         target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
         target.setHealth(hp);
 
-        OneHHOneHH.PLAYERSETTINGS.get(target.getUniqueId()).max_hp = target.getHealth();
+        PlayerData.updateFile(target, new String[]{"hp", String.valueOf(hp)});
 
         commandSender.sendMessage("§4[100HP 100H]§a Successfully set §2" + commandSender.getName() + "§a's HP to §2" + hp + "§a.");
         return true;

@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,12 +18,20 @@ public class PlayerData {
         if (!player_file.exists()) {
             player_file.createNewFile();
             setDefaults(player, player_file);
+
+            // player joining for first time
+            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r joined for the first time!");
+            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been set to 200.");
+
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(200);
+            player.setHealth(200);
         }
     }
 
     public static void setDefaults(Player player, File player_file) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
         config.set("account-name", player.getName());
+        config.set("hp", player.getHealth());
         config.set("timer-toggle", true);
         config.set("timer-display.display", "action_bar");
         config.set("timer-display.boss-bar.color", "white");
@@ -34,11 +43,9 @@ public class PlayerData {
         config.set("sound-toggle", true);
         config.set("title-toggle", true);
         config.set("hp-bars-display", "all");
-        try {
-            config.save(player_file);
-        } catch (IOException e) {
-            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-        }
+        try {config.save(player_file);}
+        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
+        OneHHOneHH.PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));
     }
 
     public static void updateFile(Player player, String[] args) {
@@ -77,6 +84,19 @@ public class PlayerData {
             if (setting != null) {
                 boolean state;
                 switch (setting) {
+
+                    case "hp":
+
+                        double hp = Double.parseDouble(arg);
+
+                        config.set("hp", hp);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp = hp;
+                        try {
+                            config.save(player_file);
+                        } catch (IOException e) {
+                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
+                        }
+                        break;
 
                     case "timer_toggle":
 
@@ -186,7 +206,7 @@ public class PlayerData {
         }
     }
 
-    static void log(String string) {
+    public static void log(String string) {
         OneHHOneHH.CONSOLE.sendMessage("");
         OneHHOneHH.CONSOLE.sendMessage(string);
         OneHHOneHH.CONSOLE.sendMessage("");
