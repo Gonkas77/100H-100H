@@ -4,11 +4,13 @@ import me.gonkas.onehhonehh.commands.*;
 import me.gonkas.onehhonehh.player.PlayerData;
 import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import me.gonkas.onehhonehh.player.PlayerSettings;
+import me.gonkas.onehhonehh.util.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +25,8 @@ import java.util.UUID;
 
 public class OneHHOneHH extends JavaPlugin {
 
+    public static FileConfiguration CONFIG;
+
     public static File PLAYERDATAFOLDER;
     public static HashMap<UUID, PlayerSettings> PLAYERSETTINGS;
     public static ConsoleCommandSender CONSOLE;
@@ -33,6 +37,11 @@ public class OneHHOneHH extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        saveDefaultConfig();
+        reloadConfig();
+
+        CONFIG = getConfig();
 
         PLAYERDATAFOLDER = new File("plugins/OneHHOneHH/player_data");
         if (!PLAYERDATAFOLDER.exists()) {PLAYERDATAFOLDER.mkdirs();}
@@ -57,12 +66,26 @@ public class OneHHOneHH extends JavaPlugin {
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                PlayerPlaytime.displayTimer(player);
-                PlayerSettings settings = PLAYERSETTINGS.get(player.getUniqueId());
 
-                if (settings.getSoundToggle() && settings.getHours() < PlayerPlaytime.getHours(player)) {
-                    settings.hours += 1;
-                    player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 100f, 1.2f);
+                if (!(getConfig().getBoolean("timer.force-off"))) {
+                    PlayerPlaytime.displayTimer(player);
+                }
+
+                PlayerSettings settings = PLAYERSETTINGS.get(player.getUniqueId());
+                if (getConfig().getBoolean("timer.goal") && PLAYERSETTINGS.get(player.getUniqueId()).getGoalToggle()) {
+                        if (settings.getHours() < Math.floor(PlayerPlaytime.getHours(player)) && PlayerPlaytime.getHours(player) < CONFIG.getInt("timer.final-goal")) {
+                            settings.hours += 1;
+
+                            if (!(CONFIG.getBoolean("sound.force-off")) && settings.getSoundToggle()) {
+                                player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 100f, 1.2f);
+                            }
+                            if (!(CONFIG.getBoolean("title.force-off")) && settings.getTitleToggle()) {
+                                player.sendTitle(
+                                        Title.ColorDecoder(CONFIG.getString("title.title.goal.color")) + Title.TextDecoder(CONFIG.getString("title.title.goal.text"), player),
+                                        Title.ColorDecoder(CONFIG.getString("title.subtitle.goal.color")) + Title.TextDecoder(CONFIG.getString("title.subtitle.goal.text"), player),
+                                        10, 40, 10);
+                            }
+                        }
                 }
             }
         }, 0, 20);
@@ -75,6 +98,7 @@ public class OneHHOneHH extends JavaPlugin {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
             config.set("hp", PLAYERSETTINGS.get(player.getUniqueId()).getHP());
+            config.set("hours", PLAYERSETTINGS.get(player.getUniqueId()).getHours());
             try {config.save(player_file);}
             catch (IOException e) {PlayerData.log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
         }
@@ -84,5 +108,3 @@ public class OneHHOneHH extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));}
     }
 }
-
-// config file

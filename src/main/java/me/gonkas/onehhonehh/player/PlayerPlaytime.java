@@ -92,46 +92,90 @@ public class PlayerPlaytime {
         String timer_type = settings.getTimerTextType()[1];
 
         if (settings.getTimerToggle()) {
-            switch (settings.getTimerDisplay()) {
+            if (OneHHOneHH.CONFIG.getBoolean("timer.force-display.do")) {
+                switch (OneHHOneHH.CONFIG.getString("timer.force-display.display")) {
 
-                case "action_bar":
-                    player.sendActionBar(playtime_type + playtime_color + "Playtime: §r" + timer_type + timer_color + getPlaytime(player));
-                    break;
+                    case "action_bar":
+                        player.sendActionBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player));
+                        break;
 
-                case "boss_bar":
+                    case "boss_bar":
 
-                    BarColor bar_color = settings.getTimerBossbarColor();
-                    BarStyle bar_style = settings.getTimerBossbarStyle();
+                        BarColor bar_color = settings.getTimerBossbarColor();
+                        BarStyle bar_style = settings.getTimerBossbarStyle();
 
-                    if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);} // -> removes player from old bossbar
-                    OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + "Playtime: §r" + timer_type + timer_color + getPlaytime(player), bar_color, bar_style));
+                        if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);} // -> removes player from old bossbar
+                        OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), bar_color, bar_style));
 
-                    // boss bar progress/not
-                    if (settings.getTimerBossbarProgression()) {OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);}
-                    else {OneHHOneHH.BOSSBAR.get(player).setProgress(100);}
+                        // boss bar progress/not
+                        if (settings.getTimerBossbarProgression()) {OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);}
+                        else {OneHHOneHH.BOSSBAR.get(player).setProgress(100);}
 
-                    OneHHOneHH.BOSSBAR.get(player).addPlayer(player);
-                    break;
+                        OneHHOneHH.BOSSBAR.get(player).addPlayer(player);
+                        break;
 
-                case "scoreboard":
-                    Scoreboard board = OneHHOneHH.MAINSCOREBOARD;
-                    player.setScoreboard(board);
+                    case "scoreboard":
+                        Scoreboard board = OneHHOneHH.MAINSCOREBOARD;
+                        player.setScoreboard(board);
 
-                    Objective objective = board.getObjective(player.getName() + "_timer");
-                    if (objective == null) {objective = board.registerNewObjective(player.getName() + "_timer", Criteria.DUMMY, playtime_type + playtime_color + "Playtime");}
-                    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                        Objective objective = board.getObjective(player.getName() + "_timer");
+                        if (objective == null) {objective = board.registerNewObjective(player.getName() + "_timer", Criteria.DUMMY, playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text"));}
+                        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                    Score score = objective.getScore(timer_type + timer_color + getPlaytime(player));
-                    score.setScore(0);
+                        Score score = objective.getScore(timer_type + timer_color + getPlaytime(player));
+                        score.setScore(0);
 
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
-                    break;
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
+                        break;
 
-                case "title":
-                    player.sendTitle("", playtime_type + playtime_color + "Playtime: §r" + timer_type + timer_color + getPlaytime(player), 0, 30, 0);
-                    break;
+                    case "title":
+                        player.sendTitle("", playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), 0, 30, 0);
+                        break;
+                }
+            } else {
+                switch (settings.getTimerDisplay()) {
+
+                    case "action_bar":
+                        player.sendActionBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player));
+                        break;
+
+                    case "boss_bar":
+
+                        BarColor bar_color = settings.getTimerBossbarColor();
+                        BarStyle bar_style = settings.getTimerBossbarStyle();
+
+                        if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);} // -> removes player from old bossbar
+                        OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), bar_color, bar_style));
+
+                        // boss bar progress/not
+                        if (settings.getTimerBossbarProgression()) {OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);}
+                        else {OneHHOneHH.BOSSBAR.get(player).setProgress(100);}
+
+                        OneHHOneHH.BOSSBAR.get(player).addPlayer(player);
+                        break;
+
+                    case "scoreboard":
+                        Scoreboard board = OneHHOneHH.MAINSCOREBOARD;
+                        player.setScoreboard(board);
+
+                        Objective objective = board.getObjective(player.getName() + "_timer");
+                        if (objective == null) {objective = board.registerNewObjective(player.getName() + "_timer", Criteria.DUMMY, playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text"));}
+                        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+                        Score score = objective.getScore(timer_type + timer_color + getPlaytime(player));
+                        score.setScore(0);
+
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
+                        objective.getScore(timer_type + timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
+                        break;
+
+                    case "title":
+                        player.sendTitle("", playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), 0, 30, 0);
+                        break;
+                }
             }
         }
     }

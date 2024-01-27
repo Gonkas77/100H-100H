@@ -1,0 +1,80 @@
+
+# Settings for timer displayed by the plugin
+timer:
+
+  # forces the timer to be off
+  force-off: false
+
+  # forces a display for the timer
+  force-display:
+    do: false
+    display: "action_bar"
+
+  # text displayed in the timer before the actualy playtime
+  text: "Playtime:"
+
+  # defines an event every 'interval' seconds
+  goal: true
+
+  # amount of hours until the final goal of the server (if there is none, set to 0)
+  final-goal: 100
+
+# ----------------------------------------------------------------------------------------------
+
+# Settings for titles played by the plugin
+sound:
+
+  # forcefully turns off ALL sounds by the plugin
+  force-off: false
+
+  # defines which events trigger the sounds
+  play:
+    death: true
+    goal: true
+
+# ----------------------------------------------------------------------------------------------
+
+# Settings for titles displayed by the plugin
+title:
+
+  # will forcefully turn off titles for everyone
+  force-off: false
+
+  # defines which events trigger the titles
+  display:
+    death: true
+    goal: true
+
+  # defines the text displayed by events
+  # text displayed in between '%' define non-text values, check last line for more info
+  title:
+    death:
+      text: "%player%"
+      color: "red"
+    goal:
+      text: "+1 Hour!"
+      color: "green"
+  subtitle:
+    death:
+      text: "survived %playtime%!"
+      color: "white"
+    goal:
+      text: "%remaining% to go!"
+      color: "white"
+
+# ----------------------------------------------------------------------------------------------
+
+# Settings for health displayed by the plugin
+health:
+
+  # forces health to be displayed in percentage (one fifth of 'initial-health')
+  force-minimize: false
+
+  # health set for every played when they first join
+  initial-health: 200
+
+# ----------------------------------------------------------------------------------------------
+
+# %player% will grab player name
+# %playtime% grabs player playtime
+# %remaining% will get the remaining hours until 'final-goal' (if set to 0, will display nothing)

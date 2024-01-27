@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,14 +16,15 @@ public class PlayerData {
         File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
         if (!player_file.exists()) {
             player_file.createNewFile();
-            setDefaults(player, player_file);
 
             // player joining for first time
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r joined for the first time!");
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been set to 200.");
 
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(200);
-            player.setHealth(200);
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
+            player.setHealth(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
+
+            setDefaults(player, player_file);
         }
     }
 
@@ -30,7 +32,8 @@ public class PlayerData {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
         config.set("account-name", player.getName());
         config.set("hp", player.getHealth());
-        config.set("timer-toggle", true);
+        config.set("hours", Math.floor(PlayerPlaytime.getHours(player)));
+        config.set("timer-toggle", false);
         config.set("timer-display.display", "action_bar");
         config.set("timer-display.boss-bar.color", "white");
         config.set("timer-display.boss-bar.style", "solid");
@@ -40,6 +43,7 @@ public class PlayerData {
         config.set("timer-time-units", "shortened");
         config.set("sound-toggle", true);
         config.set("title-toggle", true);
+        config.set("goal-toggle", false);
         config.set("hp-bars-display", "all");
         try {config.save(player_file);}
         catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
@@ -89,6 +93,32 @@ public class PlayerData {
 
                         config.set("hp", hp);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp = hp;
+                        try {
+                            config.save(player_file);
+                        } catch (IOException e) {
+                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
+                        }
+                        break;
+
+                    case "hours":
+
+                        int hours = Integer.parseInt(arg);
+
+                        config.set("hours", hours);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hours = hours;
+                        try {
+                            config.save(player_file);
+                        } catch (IOException e) {
+                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
+                        }
+                        break;
+
+                    case "goal_toggle":
+
+                        state = arg.equalsIgnoreCase("on");
+                        config.set("goal-toggle", state);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).goal_toggle = state;
+
                         try {
                             config.save(player_file);
                         } catch (IOException e) {

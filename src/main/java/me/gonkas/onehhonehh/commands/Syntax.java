@@ -17,14 +17,14 @@ public class Syntax implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!(args[0].equals("timer_toggle") || args[0].equals("timer_display") || args[0].equals("timer_color") || args[0].equals("timer_text_type") || args[0].equals("sound_toggle") || args[0].equals("title_toggle") || args[0].equals("timer_time_units") || args[0].equals("hp_bars_display"))) {
+        if (!(args[0].equals("timer_toggle") || args[0].equals("timer_display") || args[0].equals("timer_color") || args[0].equals("timer_text_type") || args[0].equals("sound_toggle") || args[0].equals("title_toggle") || args[0].equals("goal_toggle") || args[0].equals("timer_time_units") || args[0].equals("hp_bars_display"))) {
             commandSender.sendMessage("§4[100HP 100H]§c Invalid setting provided!");
             return true;
         }
 
         switch (args[0]) {
 
-            case "timer_toggle", "sound_toggle", "title_toggle":
+            case "timer_toggle", "sound_toggle", "title_toggle", "goal_toggle":
                 commandSender.sendMessage("§4[100HP 100H]§a Syntax for setting §c" + args[0] + "§a is §c<setting> <on/off>§a!");
                 break;
 

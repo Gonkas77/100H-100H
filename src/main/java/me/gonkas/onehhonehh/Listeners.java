@@ -3,26 +3,19 @@ package me.gonkas.onehhonehh;
 import me.gonkas.onehhonehh.player.PlayerData;
 import me.gonkas.onehhonehh.player.PlayerPlaytime;
 import me.gonkas.onehhonehh.player.PlayerSettings;
+import me.gonkas.onehhonehh.util.Title;
 import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
-import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 public class Listeners implements Listener {
 
@@ -39,6 +32,7 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
 
         PlayerData.updateFile(player, new String[]{"hp", String.valueOf(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP())});
+        PlayerData.updateFile(player, new String[]{"hours", String.valueOf(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHours())});
         OneHHOneHH.PLAYERSETTINGS.remove(player.getUniqueId());
     }
 
@@ -62,12 +56,19 @@ public class Listeners implements Listener {
         event.setDamage(0.1);
 
         if (hp > 0) {
-            if (settings.getHPBarsDisplay().equals("minimized")) {
+
+            if (OneHHOneHH.CONFIG.getBoolean("health.force-minimize")) {
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                 player.setHealth(hp / 5);
+
             } else {
-                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
-                player.setHealth(hp);
+                if (settings.getHPBarsDisplay().equals("minimized")) {
+                    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
+                    player.setHealth(hp / 5);
+                } else {
+                    player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
+                    player.setHealth(hp);
+                }
             }
         } else {
             PlayerDeath(player);
@@ -91,15 +92,20 @@ public class Listeners implements Listener {
             player.sendMessage("§c" + dead.getName() + "§r survived " + playtime + "!");
             player.sendMessage("");
 
-            if (settings.getTitleToggle()) {
-                player.sendTitle("§c" + dead.getName(), "survived " + playtime + "!", 10, 80, 10);
+            if (!(OneHHOneHH.CONFIG.getBoolean("title.force-off"))) {
+                if (settings.getTitleToggle() && OneHHOneHH.CONFIG.getBoolean("title.display.death")) {
+                    player.sendTitle(
+                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.title.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.title.death.text"), player),
+                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.text"), player),
+                            10, 80, 10);
+                }
             }
 
-            if (settings.getSoundToggle()) {
-                player.playSound(player, Sound.BLOCK_END_PORTAL_SPAWN, 100f, 1.2f);
+            if (!(OneHHOneHH.CONFIG.getBoolean("sound.force-off"))) {
+                if (settings.getSoundToggle()) {
+                    player.playSound(player, Sound.BLOCK_END_PORTAL_SPAWN, 100f, 1.2f);
+                }
             }
-
-            dead.setHealth(0);
-        }
+        } dead.setHealth(0);
     }
 }

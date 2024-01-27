@@ -60,7 +60,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
                     } return true;
 
-                case "timer_toggle", "sound_toggle", "title_toggle":
+                case "timer_toggle", "sound_toggle", "title_toggle", "goal_toggle":
 
                     if (!(args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off"))) {
                         commandSender.sendMessage("§4[100HP 100H]§c Setting " + args[0] + " requires syntax <setting> <on/off>!");
@@ -114,14 +114,14 @@ public class Settings implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (args.length < 2) {
-            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_toggle", "timer_time_units", "hp_bars_display", "reset"};
+            String[] list = {"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_toggle", "timer_time_units", "hp_bars_display", "reset", "goal_toggle"};
             return Arrays.stream(list).toList();
 
         } else if (args.length == 2) {
 
             return switch (args[0]) {
                 default -> new ArrayList<String>(0);
-                case "timer_toggle", "sound_toggle", "title_toggle" -> {
+                case "timer_toggle", "sound_toggle", "title_toggle", "goal_toggle" -> {
                     String[] list = {"on", "off"};
                     yield Arrays.stream(list).toList();
                 }

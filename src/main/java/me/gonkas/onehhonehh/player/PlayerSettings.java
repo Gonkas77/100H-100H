@@ -12,11 +12,12 @@ import java.util.UUID;
 public class PlayerSettings {
 
     public double hp;
-    public long hours;
+    public int hours;
 
     boolean timer_toggle;
     boolean sound_toggle;
     boolean title_toggle;
+    boolean goal_toggle;
 
     String timer_display;
     String hp_bars_display;
@@ -35,11 +36,12 @@ public class PlayerSettings {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
         hp = config.getDouble("hp");
-        hours = Math.round(PlayerPlaytime.getHours(Bukkit.getPlayer(uuid)));
+        hours = config.getInt("hours");
 
         timer_toggle = config.getBoolean("timer-toggle");
         sound_toggle = config.getBoolean("sound-toggle");
         title_toggle = config.getBoolean("title-toggle");
+        goal_toggle = config.getBoolean("goal-toggle");
 
         timer_display = config.getString("timer-display.display");
         hp_bars_display = config.getString("hp-bars-display");
@@ -177,6 +179,7 @@ public class PlayerSettings {
 
     public double getHP() {return hp;}
     public long getHours() {return hours;}
+    public boolean getGoalToggle() {return goal_toggle;}
     public boolean getTimerToggle() {return timer_toggle;}
     public boolean getSoundToggle() {return sound_toggle;}
     public boolean getTitleToggle() {return title_toggle;}
