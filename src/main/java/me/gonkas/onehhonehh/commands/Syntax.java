@@ -55,7 +55,7 @@ public class Syntax implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
-            return Arrays.stream(new String[]{"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_toggle", "timer_time_units", "hp_bars_display"}).toList();
+            return Arrays.stream(new String[]{"timer_toggle", "timer_display", "timer_color", "timer_text_type", "sound_toggle", "title_toggle", "timer_time_units", "hp_bars_display", "goal_toggle"}).toList();
         } else {
             return new ArrayList<>(0);
         }
