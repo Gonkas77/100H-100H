@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
+import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +12,7 @@ import java.util.UUID;
 public class PlayerSettings {
 
     public double hp;
+    public long hours;
 
     boolean timer_toggle;
     boolean sound_toggle;
@@ -33,6 +35,7 @@ public class PlayerSettings {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
 
         hp = config.getDouble("hp");
+        hours = Math.round(PlayerPlaytime.getHours(Bukkit.getPlayer(uuid)));
 
         timer_toggle = config.getBoolean("timer-toggle");
         sound_toggle = config.getBoolean("sound-toggle");
@@ -61,9 +64,9 @@ public class PlayerSettings {
         return switch (string) {
             default -> new String[0];
             case "colon" -> new String[]{":", ":"};
-            case "single_character" -> new String[]{"h", "m", "s"};
-            case "shortened" -> new String[]{"h", "min", "s"};
-            case "full" -> new String[]{"hours", "minutes", "seconds"};
+            case "single_character" -> new String[]{"h ", "m ", "s"};
+            case "shortened" -> new String[]{"h ", "min ", "s"};
+            case "full" -> new String[]{"hours ", "minutes ", "seconds"};
         };
     }
 
@@ -173,6 +176,7 @@ public class PlayerSettings {
     }
 
     public double getHP() {return hp;}
+    public long getHours() {return hours;}
     public boolean getTimerToggle() {return timer_toggle;}
     public boolean getSoundToggle() {return sound_toggle;}
     public boolean getTitleToggle() {return title_toggle;}

@@ -58,10 +58,11 @@ public class OneHHOneHH extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 PlayerPlaytime.displayTimer(player);
-                if (PLAYERSETTINGS.get(player.getUniqueId()).getSoundToggle()) {
-                    if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) % 72000 == 0) {
-                        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 100f, 1.2f);
-                    }
+                PlayerSettings settings = PLAYERSETTINGS.get(player.getUniqueId());
+
+                if (settings.getSoundToggle() && settings.getHours() < PlayerPlaytime.getHours(player)) {
+                    settings.hours += 1;
+                    player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 100f, 1.2f);
                 }
             }
         }, 0, 20);

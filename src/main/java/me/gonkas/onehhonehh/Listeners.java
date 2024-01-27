@@ -6,6 +6,7 @@ import me.gonkas.onehhonehh.player.PlayerSettings;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.Bukkit;
@@ -69,33 +70,36 @@ public class Listeners implements Listener {
                 player.setHealth(hp);
             }
         } else {
-            player.setHealth(0);
+            PlayerDeath(player);
         }
     }
 
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void PlayerDeath(Player dead) {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
 
+            String playtime = PlayerPlaytime.getPlaytime(dead);
+
             // console logs
-            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + event.getPlayer().getName() + "§4 has died!§r They survived for " + PlayerPlaytime.getPlaytime(event.getPlayer()) + ".");
+            OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + dead.getName() + "§4 has died!§r They survived for §a" + playtime + "§r.");
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Death title and subtitle displayed to everyone online.");
             // -----------
 
             PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
-            if (settings.getTitleToggle()) {
-                player.sendTitle("§c" + event.getPlayer().getName(), "survived " + PlayerPlaytime.getPlaytime(event.getPlayer()) + "!", 10, 80, 10);
-            }
+            player.sendMessage("");
+            player.sendMessage("§c" + dead.getName() + "§r survived " + playtime + "!");
+            player.sendMessage("");
 
-            player.sendMessage("");
-            player.sendMessage("§c" + event.getPlayer().getName() + "§r survived " + PlayerPlaytime.getPlaytime(event.getPlayer()) + "!");
-            player.sendMessage("");
+            if (settings.getTitleToggle()) {
+                player.sendTitle("§c" + dead.getName(), "survived " + playtime + "!", 10, 80, 10);
+            }
 
             if (settings.getSoundToggle()) {
-                player.playSound(player, Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.MASTER, 100f, 1.2f);
+                player.playSound(player, Sound.BLOCK_END_PORTAL_SPAWN, 100f, 1.2f);
             }
+
+            dead.setHealth(0);
         }
     }
 }

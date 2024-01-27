@@ -179,6 +179,7 @@ public class PlayerData {
 
                         config.set("timer-time-units", arg);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_units = PlayerSettings.timeUnitsEncoder(arg);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_unit_type = arg;
 
                         try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}

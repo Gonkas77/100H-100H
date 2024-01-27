@@ -30,7 +30,7 @@ public class PlayerPlaytime {
         if (settings.getTimerTimeUnitsType().equals("colon")) {
             return hours + settings.getTimerTimeUnits()[0] + min + settings.getTimerTimeUnits()[1] + sec;
         } else {
-            return hours + settings.getTimerTimeUnits()[0] + " " + min + settings.getTimerTimeUnits()[1] + " " + sec + settings.getTimerTimeUnits()[2];
+            return hours + settings.getTimerTimeUnits()[0] + min + settings.getTimerTimeUnits()[1] + sec + settings.getTimerTimeUnits()[2];
         }
     }
 
@@ -68,11 +68,11 @@ public class PlayerPlaytime {
         } else {
             return switch (time) {
                 case "hours" ->
-                        hours + settings.getTimerTimeUnits()[0] + " " + 59 + settings.getTimerTimeUnits()[1] + " " + 59 + settings.getTimerTimeUnits()[2];
+                        hours + settings.getTimerTimeUnits()[0] + 59 + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
                 case "minutes" ->
-                        hours + settings.getTimerTimeUnits()[0] + " " + minMinusOne + settings.getTimerTimeUnits()[1] + " " + 59 + settings.getTimerTimeUnits()[2];
+                        hours + settings.getTimerTimeUnits()[0] + minMinusOne + settings.getTimerTimeUnits()[1] + 59 + settings.getTimerTimeUnits()[2];
                 case "seconds" ->
-                        hours + settings.getTimerTimeUnits()[0] + " " + min + settings.getTimerTimeUnits()[1] + " " + sec + settings.getTimerTimeUnits()[2];
+                        hours + settings.getTimerTimeUnits()[0] + min + settings.getTimerTimeUnits()[1] + sec + settings.getTimerTimeUnits()[2];
                 default -> "";
             };
         }
