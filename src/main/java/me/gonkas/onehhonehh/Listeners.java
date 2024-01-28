@@ -40,6 +40,7 @@ public class Listeners implements Listener {
     public void onPlayerDamage(EntityDamageEvent event) {
 
         if ((event.getEntity().getType()) != EntityType.PLAYER) {return;}
+        if (event.getFinalDamage() < 0) {return;}
 
         Player player = (Player) event.getEntity();
 
@@ -95,8 +96,8 @@ public class Listeners implements Listener {
             if (!(OneHHOneHH.CONFIG.getBoolean("title.force-off"))) {
                 if (settings.getTitleToggle() && OneHHOneHH.CONFIG.getBoolean("title.display.death")) {
                     player.sendTitle(
-                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.title.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.title.death.text"), player),
-                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.text"), player),
+                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.title.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.title.death.text"), dead),
+                            Title.ColorDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.color")) + Title.TextDecoder(OneHHOneHH.CONFIG.getString("title.subtitle.death.text"), dead),
                             10, 80, 10);
                 }
             }
