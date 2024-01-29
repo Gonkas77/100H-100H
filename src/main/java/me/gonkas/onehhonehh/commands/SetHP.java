@@ -51,7 +51,7 @@ public class SetHP implements CommandExecutor, TabCompleter {
 
         PlayerData.updateFile(target, new String[]{"hp", String.valueOf(hp)});
 
-        commandSender.sendMessage("§4[100HP 100H]§a Successfully set §2" + commandSender.getName() + "§a's HP to §2" + hp + "§a.");
+        commandSender.sendMessage("§4[100HP 100H]§a Successfully set §2" + target.getName() + "§a's HP to §2" + hp + "§a.");
         return true;
     }
 

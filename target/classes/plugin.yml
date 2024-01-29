@@ -14,3 +14,5 @@ commands:
     default: true
   syntax:
     default: true
+  timer:
+    default: true

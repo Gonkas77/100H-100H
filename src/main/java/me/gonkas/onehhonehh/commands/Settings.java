@@ -52,7 +52,7 @@ public class Settings implements CommandExecutor, TabCompleter {
 
                         PlayerData.setDefaults(player, new File(OneHHOneHH.PLAYERDATAFOLDER, (player.getUniqueId() + ".yml")));
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(commandSender.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}

@@ -132,7 +132,7 @@ public class PlayerData {
                         config.set("timer-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_toggle = state;
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {
@@ -162,7 +162,7 @@ public class PlayerData {
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_bossbar_style = PlayerSettings.BossBarStyle(arg3);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_bossbar_progression = state;
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}
@@ -180,7 +180,7 @@ public class PlayerData {
                         config.set("timer-color", arg + "-" + arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_color = PlayerSettings.colorEncoder(new String[]{arg, arg2});
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {
@@ -195,7 +195,7 @@ public class PlayerData {
                         config.set("timer-text-type", arg + "-" + arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_text_type = PlayerSettings.textTypeEncoder(new String[]{arg, arg2});
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {
@@ -211,7 +211,7 @@ public class PlayerData {
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_units = PlayerSettings.timeUnitsEncoder(arg);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_time_unit_type = arg;
 
-                        try {OneHHOneHH.MAINSCOREBOARD.getObjective(player.getName() + "_timer").unregister();}
+                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
                         try {

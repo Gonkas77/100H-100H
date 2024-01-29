@@ -8,7 +8,6 @@ import me.gonkas.onehhonehh.util.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,8 @@ public class OneHHOneHH extends JavaPlugin {
 
     public static HashMap<Player, BossBar> BOSSBAR;
     public static ScoreboardManager SCOREBOARDMANAGER;
-    public static Scoreboard MAINSCOREBOARD;
+    public static HashMap<Player, Scoreboard> SCOREBOARDS;
+    public static HashMap<Player, Team> TEAMS;
 
     @Override
     public void onEnable() {
@@ -52,11 +53,13 @@ public class OneHHOneHH extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
         getCommand("gethp").setExecutor(new GetHP());
         getCommand("sethp").setExecutor(new SetHP());
+        getCommand("timer").setExecutor(new Timer());
         getCommand("syntax").setExecutor(new Syntax());
         getCommand("settings").setExecutor(new Settings());
 
         SCOREBOARDMANAGER = Bukkit.getScoreboardManager();
-        MAINSCOREBOARD = SCOREBOARDMANAGER.getMainScoreboard();
+        SCOREBOARDS = new HashMap<Player, Scoreboard>();
+        TEAMS = new HashMap<Player, Team>();
         BOSSBAR = new HashMap<Player, BossBar>();
 
         CONSOLE = Bukkit.getConsoleSender();

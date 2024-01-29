@@ -29,6 +29,9 @@ public class PlayerSettings {
 
     BarColor timer_bossbar_color;
     BarStyle timer_bossbar_style;
+
+    String timer_bossbar_color_type;
+    String timer_bossbar_style_type;
     boolean timer_bossbar_progression;
 
     public PlayerSettings(UUID uuid) {
@@ -52,7 +55,9 @@ public class PlayerSettings {
         timer_time_unit_type = config.getString("timer-time-units");
 
         timer_bossbar_color = BossBarColor(config.getString("timer-display.boss-bar.color"));
+        timer_bossbar_color_type = config.getString("timer-display.boss-bar.color");
         timer_bossbar_style = BossBarStyle(config.getString("timer-display.boss-bar.style"));
+        timer_bossbar_style_type = config.getString("timer-display.boss-bar.style");
         timer_bossbar_progression = config.getBoolean("timer-display.boss-bar.progression");
     }
 
@@ -192,5 +197,8 @@ public class PlayerSettings {
 
     public BarColor getTimerBossbarColor() {return timer_bossbar_color;}
     public BarStyle getTimerBossbarStyle() {return timer_bossbar_style;}
+
+    public String getTimerBossbarColorType() {return timer_bossbar_color_type;}
+    public String getTimerBossbarStyleType() {return timer_bossbar_style_type;}
     public boolean getTimerBossbarProgression() {return timer_bossbar_progression;}
 }

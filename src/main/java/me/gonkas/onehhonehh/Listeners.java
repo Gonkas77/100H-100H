@@ -43,6 +43,7 @@ public class Listeners implements Listener {
         if (event.getFinalDamage() < 0) {return;}
 
         Player player = (Player) event.getEntity();
+        if (player.isBlocking()) {return;}
 
         // console logs
         OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r took §4" + event.getFinalDamage() + "§r damage.");
@@ -68,7 +69,6 @@ public class Listeners implements Listener {
                     player.setHealth(hp / 5);
                 } else {
                     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp);
-                    player.setHealth(hp);
                 }
             }
         } else {
