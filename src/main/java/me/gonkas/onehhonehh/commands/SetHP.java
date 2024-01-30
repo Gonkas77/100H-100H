@@ -2,6 +2,7 @@ package me.gonkas.onehhonehh.commands;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
 import me.gonkas.onehhonehh.player.PlayerData;
+import me.gonkas.onehhonehh.util.Array;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SetHP implements CommandExecutor, TabCompleter {
@@ -38,7 +40,7 @@ public class SetHP implements CommandExecutor, TabCompleter {
         }
 
         if (hp > 0) {
-            if (OneHHOneHH.PLAYERSETTINGS.get(target.getUniqueId()).getHPBarsDisplay().equals("minimized")) {
+            if (OneHHOneHH.PLAYERSETTINGS.get(target.getUniqueId()).getHPBarsDisplay()) {
                 target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                 target.setHealth(hp / 5);
             } else {
@@ -58,11 +60,24 @@ public class SetHP implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length < 2) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+            return compareStrings(args[0], Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         } else if (args.length == 2){
-            ArrayList<String> list = new ArrayList(1);
-            list.add("<value>");
-            return list;
+            return Arrays.stream(new String[]{"<value>"}).toList();
         } else {return new ArrayList<String>(0);}
+    }
+
+    static List<String> compareStrings(String input, List<String> strings) {
+        String[] matches = new String[0];
+        String[] candidates = new String[0];
+
+        for (String s : strings) {
+            try {candidates = Array.arrayAppend(candidates, s.substring(0, input.length()));}
+            catch (StringIndexOutOfBoundsException ignored) {candidates = Array.arrayAppend(candidates, null);}
+        }
+        for (int i=0; i < candidates.length; i++) {
+            if (candidates[i] != null) {
+                if (candidates[i].equals(input)) {matches = Array.arrayAppend(matches, strings.get(i));}
+            }
+        } return Arrays.stream(matches).toList();
     }
 }

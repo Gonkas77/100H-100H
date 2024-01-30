@@ -1,7 +1,6 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
-import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,16 +11,15 @@ import java.util.UUID;
 public class PlayerSettings {
 
     public double hp;
-    public int hours;
+    public double hours;
 
-    boolean timer_toggle;
-    boolean sound_toggle;
-    boolean title_toggle;
-    boolean goal_toggle;
+    public boolean timer_toggle;
+    public boolean sound_toggle;
+    public boolean title_toggle;
+    public boolean goal_toggle;
+    public boolean minimize_health;
 
     String timer_display;
-    String hp_bars_display;
-
     String[] timer_color;
     String[] timer_text_type;
     String[] timer_time_units;
@@ -45,10 +43,9 @@ public class PlayerSettings {
         sound_toggle = config.getBoolean("sound-toggle");
         title_toggle = config.getBoolean("title-toggle");
         goal_toggle = config.getBoolean("goal-toggle");
+        minimize_health = config.getBoolean("minimize-health");
 
         timer_display = config.getString("timer-display.display");
-        hp_bars_display = config.getString("hp-bars-display");
-
         timer_color = colorEncoder(config.getString("timer-color").split("-"));
         timer_text_type = textTypeEncoder(config.getString("timer-text-type").split("-"));
         timer_time_units = timeUnitsEncoder(config.getString("timer-time-units"));
@@ -183,13 +180,13 @@ public class PlayerSettings {
     }
 
     public double getHP() {return hp;}
-    public long getHours() {return hours;}
+    public double getHours() {return hours;}
     public boolean getGoalToggle() {return goal_toggle;}
     public boolean getTimerToggle() {return timer_toggle;}
     public boolean getSoundToggle() {return sound_toggle;}
     public boolean getTitleToggle() {return title_toggle;}
+    public boolean getHPBarsDisplay() {return minimize_health;}
     public String getTimerDisplay() {return timer_display;}
-    public String getHPBarsDisplay() {return hp_bars_display;}
     public String[] getTimerColor() {return timer_color;}
     public String[] getTimerTextType() {return timer_text_type;}
     public String[] getTimerTimeUnits() {return timer_time_units;}

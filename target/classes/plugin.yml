@@ -1,5 +1,5 @@
 name: OneHHOneHH
-version: '1.0'
+version: '1.1'
 main: me.gonkas.onehhonehh.OneHHOneHH
 api-version: '1.20'
 authors: [Gonkas77]
@@ -8,11 +8,11 @@ commands:
   sethp:
     permission: onehhonehh.admin
     permission-message: "§4Only Admins can run this command!"
-  settings:
-    default: true
   gethp:
     default: true
   syntax:
     default: true
   timer:
+    default: true
+  toggle:
     default: true

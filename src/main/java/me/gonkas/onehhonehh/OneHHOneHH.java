@@ -54,8 +54,8 @@ public class OneHHOneHH extends JavaPlugin {
         getCommand("gethp").setExecutor(new GetHP());
         getCommand("sethp").setExecutor(new SetHP());
         getCommand("timer").setExecutor(new Timer());
+        getCommand("toggle").setExecutor(new Toggle());
         getCommand("syntax").setExecutor(new Syntax());
-        getCommand("settings").setExecutor(new Settings());
 
         SCOREBOARDMANAGER = Bukkit.getScoreboardManager();
         SCOREBOARDS = new HashMap<Player, Scoreboard>();
@@ -64,7 +64,7 @@ public class OneHHOneHH extends JavaPlugin {
 
         CONSOLE = Bukkit.getConsoleSender();
         CONSOLE.sendMessage("");
-        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v1.0 loaded successfully!");
+        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v1.1 loaded successfully!");
         CONSOLE.sendMessage("");
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {

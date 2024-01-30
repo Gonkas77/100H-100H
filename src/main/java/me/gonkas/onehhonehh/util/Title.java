@@ -19,7 +19,7 @@ public class Title {
                         array[i] = PlayerPlaytime.getPlaytime(player);
                         break;
                     case "remaining":
-                        array[i] = String.valueOf(100 - OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHours());
+                        array[i] = String.valueOf(Math.round(100 - OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHours()));
                         break;
                 }
             }

@@ -64,7 +64,7 @@ public class Listeners implements Listener {
                 player.setHealth(hp / 5);
 
             } else {
-                if (settings.getHPBarsDisplay().equals("minimized")) {
+                if (settings.getHPBarsDisplay()) {
                     player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                     player.setHealth(hp / 5);
                 } else {

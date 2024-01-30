@@ -1,7 +1,6 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
-import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,7 +43,7 @@ public class PlayerData {
         config.set("sound-toggle", true);
         config.set("title-toggle", true);
         config.set("goal-toggle", false);
-        config.set("hp-bars-display", "all");
+        config.set("minimize-health", false);
         try {config.save(player_file);}
         catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
         OneHHOneHH.PLAYERSETTINGS.put(player.getUniqueId(), new PlayerSettings(player.getUniqueId()));
@@ -54,12 +53,13 @@ public class PlayerData {
         File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
 
         String setting = args[0];
-        String arg = args[1];
 
+        String arg = "";
         String arg2 = "";
         String arg3 = "";
         String arg4 = "";
 
+        if (args.length >= 2) {arg = args[1];}
         if (args.length >= 3) {arg2 = args[2];}
         if (args.length >= 4) {arg3 = args[3];}
         if (args.length >= 5) {arg4 = args[4];}
@@ -69,18 +69,13 @@ public class PlayerData {
 
             if (!config.contains("account-name")) {
                 config.set("account-name", player.getName());
-                try {
-                    config.save(player_file);
-                } catch (IOException error) {
-                    log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                }
+                try {config.save(player_file);}
+                catch (IOException error) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
+
             } else if (!Objects.equals(config.getString("account-name"), player.getName())) {
                 config.set("account-name", player.getName());
-                try {
-                    config.save(player_file);
-                } catch (IOException error) {
-                    log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                }
+                try {config.save(player_file);}
+                catch (IOException error) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
             }
 
             if (setting != null) {
@@ -93,53 +88,43 @@ public class PlayerData {
 
                         config.set("hp", hp);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp = hp;
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "hours":
 
-                        int hours = Integer.parseInt(arg);
+                        double hours = Double.parseDouble(arg);
 
                         config.set("hours", hours);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hours = hours;
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "goal_toggle":
 
-                        state = arg.equalsIgnoreCase("on");
+                        state = !config.getBoolean("goal-toggle");
                         config.set("goal-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).goal_toggle = state;
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        updateFile(player, new String[]{"hours", String.valueOf(Math.floor(PlayerPlaytime.getHours(player)))});
+
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "timer_toggle":
 
-                        state = arg.equalsIgnoreCase("on");
+                        state = !config.getBoolean("timer-toggle");
                         config.set("timer-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_toggle = state;
 
                         try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "timer_display":
@@ -168,11 +153,8 @@ public class PlayerData {
                         try {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);}
                         catch (NullPointerException ignored) {}
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "timer_color":
@@ -183,11 +165,8 @@ public class PlayerData {
                         try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "timer_text_type":
@@ -198,11 +177,8 @@ public class PlayerData {
                         try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "timer_time_units":
@@ -214,43 +190,35 @@ public class PlayerData {
                         try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "sound_toggle":
 
-                        state = arg.equalsIgnoreCase("on");
+                        state = !config.getBoolean("sound-toggle");
                         config.set("sound-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).sound_toggle = state;
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
                     case "title_toggle":
 
-                        state = arg.equalsIgnoreCase("on");
+                        state = !config.getBoolean("title-toggle");
                         config.set("title-toggle", state);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).title_toggle = state;
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
 
-                    case "hp_bars_display":
+                    case "minimize_health_toggle":
 
-                        config.set("hp-bars-display", arg);
-                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).hp_bars_display = arg;
+                        state = !config.getBoolean("minimize-health");
+                        config.set("minimize-health", state);
+                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).minimize_health = state;
 
-                        if (arg.equals("minimized")) {
+                        if (!state) {
                             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
                             player.setHealth(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP() / 5);
                         } else {
@@ -258,11 +226,8 @@ public class PlayerData {
                             player.setHealth(OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHP());
                         }
 
-                        try {
-                            config.save(player_file);
-                        } catch (IOException e) {
-                            log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");
-                        }
+                        try {config.save(player_file);}
+                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
                         break;
                 }
             }

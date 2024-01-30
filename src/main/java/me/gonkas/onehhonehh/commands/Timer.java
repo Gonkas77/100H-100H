@@ -1,11 +1,9 @@
 package me.gonkas.onehhonehh.commands;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
-import me.gonkas.onehhonehh.player.PlayerData;
 
 import me.gonkas.onehhonehh.player.PlayerSettings;
 import me.gonkas.onehhonehh.util.Array;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +35,7 @@ public class Timer implements CommandExecutor, TabCompleter {
             commandSender.sendMessage("§4[100H 100H]§c Command <timer> requires syntax <setting> <argument>!");
             return true;
         } else if (!(args[0].equals("color") || args[0].equals("display") || args[0].equals("text_type") || args[0].equals("time_units") || args[0].equals("reset"))) {
-            commandSender.sendMessage("§4[100H 100H]§c Invalid setting given! Use <color/display/text_type/time_units>.");
+            commandSender.sendMessage("§4[100H 100H]§c Invalid setting given! Use <color/display/text_type/time_units/reset>.");
             return true;
         }
 
@@ -118,7 +115,7 @@ public class Timer implements CommandExecutor, TabCompleter {
                         commandSender.sendMessage("§4[100HP 100H]§c Are you SURE you want to reset your timer settings?");
                         commandSender.sendMessage("§4[100HP 100H]§c Run the command §4\"/timer reset confirm\"§c to confirm.");
                     } else if (args[1].equals("confirm")) {
-                        Player player = (Player) commandSender;
+                        Player player = ((Player) commandSender).getPlayer();
                         updateFile(player, new String[]{"timer_color", "white", "white"});
                         updateFile(player, new String[]{"timer_display", "action_bar"});
                         updateFile(player, new String[]{"timer_text_type", "normal", "normal"});
@@ -131,6 +128,7 @@ public class Timer implements CommandExecutor, TabCompleter {
 
         args[0] = "timer_" + args[0];
         updateFile((Player) commandSender, args);
+        commandSender.sendMessage("§4[100HP 100H]§a Successfully updated §2" + args[0] + "§a.");
         return true;
     }
 
@@ -239,31 +237,18 @@ public class Timer implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    static List<String> compareStrings(String s, String[] strings) {
-        String[] matches = strings;
-        char[] array;
-        boolean[] states;
-        int index = 0;
-        while (index < s.length()) {
-            array = new char[matches.length];
-            for (int i=0; i < matches.length; i++) {
-                if (index > matches[i].length()) {matches = Array.arrayRemove(matches, matches[i]);}
-                try {array[i] = matches[i].charAt(index);}
-                catch (IndexOutOfBoundsException ignored) {}
-                OneHHOneHH.CONSOLE.sendMessage(Arrays.toString(array));
+    static List<String> compareStrings(String input, String[] strings) {
+        String[] matches = new String[0];
+        String[] candidates = new String[0];
+
+        for (String s : strings) {
+            try {candidates = Array.arrayAppend(candidates, s.substring(0, input.length()));}
+            catch (StringIndexOutOfBoundsException ignored) {candidates = Array.arrayAppend(candidates, null);}
+        }
+        for (int i=0; i < candidates.length; i++) {
+            if (candidates[i] != null) {
+                if (candidates[i].equals(input)) {matches = Array.arrayAppend(matches, strings[i]);}
             }
-            states = new boolean[strings.length];
-            for (int i=0; i < array.length; i++) {
-                if (array[i] == s.charAt(index)) {states[i] = true;}
-                OneHHOneHH.CONSOLE.sendMessage(Arrays.toString(states));
-            }
-            matches = new String[0];
-            for (int i=0; i < states.length; i++) {
-                if (states[i]) {matches = Array.arrayAppend(matches, strings[i]);}
-                OneHHOneHH.CONSOLE.sendMessage(Arrays.toString(matches));
-            }
-            if (strings.length == 0) {break;}TO DO ASDANSDIFUSDBIA
-            index++;
         } return Arrays.stream(matches).toList();
     }
 }

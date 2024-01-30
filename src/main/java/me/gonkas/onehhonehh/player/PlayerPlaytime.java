@@ -2,14 +2,11 @@ package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
-
-import java.util.HashMap;
 
 public class PlayerPlaytime {
 
