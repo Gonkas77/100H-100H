@@ -1,6 +1,7 @@
 package me.gonkas.onehhonehh.player;
 
 import me.gonkas.onehhonehh.OneHHOneHH;
+import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -20,8 +21,10 @@ public class PlayerData {
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r joined for the first time!");
             OneHHOneHH.CONSOLE.sendMessage("§4[100H 100H]§r Player §a" + player.getName() + "§r's HP has been set to 200.");
 
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
-            player.setHealth(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
+            if (player.getStatistic(Statistic.PLAY_ONE_MINUTE) <= 10) {
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
+                player.setHealth(OneHHOneHH.CONFIG.getDouble("health.initial-health"));
+            }
 
             setDefaults(player, player_file);
         }

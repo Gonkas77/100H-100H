@@ -69,7 +69,7 @@ public class Toggle implements CommandExecutor, TabCompleter {
             case "sound" -> !OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getSoundToggle();
             case "title" -> !OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getTitleToggle();
             case "goal" -> !OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getGoalToggle();
-            case "minimize_health" -> !OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHPBarsDisplay();
+            case "minimize_health" -> OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).getHPBarsDisplay();
         };
 
         String string;

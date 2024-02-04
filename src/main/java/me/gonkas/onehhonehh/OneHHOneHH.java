@@ -46,7 +46,7 @@ public class OneHHOneHH extends JavaPlugin {
 
         PLAYERDATAFOLDER = new File("plugins/OneHHOneHH/player_data");
         if (!PLAYERDATAFOLDER.exists()) {PLAYERDATAFOLDER.mkdirs();}
-        PLAYERSETTINGS = new HashMap<UUID, PlayerSettings>();
+        PLAYERSETTINGS = new HashMap<>();
 
         antiReload(); // makes sure that even after /reload plugin settings work properly
 
@@ -58,9 +58,9 @@ public class OneHHOneHH extends JavaPlugin {
         getCommand("syntax").setExecutor(new Syntax());
 
         SCOREBOARDMANAGER = Bukkit.getScoreboardManager();
-        SCOREBOARDS = new HashMap<Player, Scoreboard>();
-        TEAMS = new HashMap<Player, Team>();
-        BOSSBAR = new HashMap<Player, BossBar>();
+        SCOREBOARDS = new HashMap<>();
+        TEAMS = new HashMap<>();
+        BOSSBAR = new HashMap<>();
 
         CONSOLE = Bukkit.getConsoleSender();
         CONSOLE.sendMessage("");
@@ -99,9 +99,10 @@ public class OneHHOneHH extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             File player_file = new File(OneHHOneHH.PLAYERDATAFOLDER, player.getUniqueId() + ".yml");
             YamlConfiguration config = YamlConfiguration.loadConfiguration(player_file);
+            PlayerSettings settings = PLAYERSETTINGS.get(player.getUniqueId());
 
-            config.set("hp", PLAYERSETTINGS.get(player.getUniqueId()).getHP());
-            config.set("hours", PLAYERSETTINGS.get(player.getUniqueId()).getHours());
+            config.set("hp", settings.getHP());
+            config.set("hours", settings.getHours());
             try {config.save(player_file);}
             catch (IOException e) {PlayerData.log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
         }
