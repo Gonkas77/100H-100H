@@ -7,6 +7,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import org.bukkit.ChatColor;
 
 public class PlayerPlaytime {
 
@@ -87,9 +88,7 @@ public class PlayerPlaytime {
         PlayerSettings settings = OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId());
 
         String playtime_color = settings.getTimerColor()[0];
-        String playtime_type = settings.getTimerTextType()[0];
         String timer_color = settings.getTimerColor()[1];
-        String timer_type = settings.getTimerTextType()[1];
         String display;
 
         if (settings.getTimerToggle()) {
@@ -99,7 +98,7 @@ public class PlayerPlaytime {
             switch (display) {
 
                 case "action_bar":
-                    player.sendActionBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player));
+                    player.sendActionBar( playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_color + getPlaytime(player));
                     break;
 
                 case "boss_bar":
@@ -108,7 +107,7 @@ public class PlayerPlaytime {
                     BarStyle bar_style = settings.getTimerBossbarStyle();
 
                     if (OneHHOneHH.BOSSBAR.get(player) != null) {OneHHOneHH.BOSSBAR.get(player).removePlayer(player);} // -> removes player from old bossbar
-                    OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), bar_color, bar_style));
+                    OneHHOneHH.BOSSBAR.put(player, Bukkit.createBossBar(playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_color + getPlaytime(player), bar_color, bar_style));
 
                     // boss bar progress/not
                     if (settings.getTimerBossbarProgression()) {OneHHOneHH.BOSSBAR.get(player).setProgress(getHours(player) / 100);}
@@ -128,19 +127,19 @@ public class PlayerPlaytime {
                     team.addPlayer(player);
 
                     Objective objective = board.getObjective(player.getName() + "_timer");
-                    if (objective == null) {objective = board.registerNewObjective(player.getName() + "_timer", Criteria.DUMMY, playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text"));}
+                    if (objective == null) {objective = board.registerNewObjective(player.getName() + "_timer", Criteria.DUMMY,  playtime_color + OneHHOneHH.CONFIG.getString("timer.text"));}
                     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                    Score score = objective.getScore(timer_type + timer_color + getPlaytime(player));
+                    Score score = objective.getScore(timer_color + getPlaytime(player));
                     score.setScore(0);
 
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
-                    objective.getScore(timer_type + timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
+                    objective.getScore(timer_color + resetOldTimer(player, "hours")).resetScore(); // reset old
+                    objective.getScore(timer_color + resetOldTimer(player, "minutes")).resetScore(); // reset old
+                    objective.getScore(timer_color + resetOldTimer(player, "seconds")).resetScore(); // reset old
                     break;
 
                 case "title":
-                    player.sendTitle("", playtime_type + playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_type + timer_color + getPlaytime(player), 0, 30, 0);
+                    player.sendTitle("", playtime_color + OneHHOneHH.CONFIG.getString("timer.text") + " §r" + timer_color + getPlaytime(player), 0, 30, 0);
                     break;
             }
         }

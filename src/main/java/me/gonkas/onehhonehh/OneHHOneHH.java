@@ -44,6 +44,11 @@ public class OneHHOneHH extends JavaPlugin {
 
         CONFIG = getConfig();
 
+        CONSOLE = Bukkit.getConsoleSender();
+        CONSOLE.sendMessage("");
+        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v1.1 loaded successfully!");
+        CONSOLE.sendMessage("");
+
         PLAYERDATAFOLDER = new File("plugins/OneHHOneHH/player_data");
         if (!PLAYERDATAFOLDER.exists()) {PLAYERDATAFOLDER.mkdirs();}
         PLAYERSETTINGS = new HashMap<>();
@@ -61,11 +66,6 @@ public class OneHHOneHH extends JavaPlugin {
         SCOREBOARDS = new HashMap<>();
         TEAMS = new HashMap<>();
         BOSSBAR = new HashMap<>();
-
-        CONSOLE = Bukkit.getConsoleSender();
-        CONSOLE.sendMessage("");
-        CONSOLE.sendMessage("§4[100H 100H]§a Plugin v1.1 loaded successfully!");
-        CONSOLE.sendMessage("");
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {

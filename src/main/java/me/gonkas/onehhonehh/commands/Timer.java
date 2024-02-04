@@ -23,7 +23,6 @@ public class Timer implements CommandExecutor, TabCompleter {
     String[] SETTINGS = {"color", "display", "text_type", "time_units", "reset"};
     String[] COLORS = {"black", "cyan", "blue", "green", "dark_red", "purple", "gold", "light_gray", "gray", "light_blue", "lime", "aqua", "red", "pink", "yellow", "white"};
     String[] DISPLAYS = {"action_bar", "boss_bar", "scoreboard", "title"};
-    String[] FORMATS = {"normal", "bold", "italic", "underlined", "bold_italic", "bold_underlined", "italic_underlined", "bold_italic_underlined"};
     String[] TIMEUNITS = {"colon", "single_character", "shortened", "full"};
 
     String[] BOSSBARCOLORS = {"blue", "green", "pink", "purple", "red", "white", "yellow"};
@@ -34,8 +33,8 @@ public class Timer implements CommandExecutor, TabCompleter {
         if (args.length < 2 && !args[0].equals("reset")) {
             commandSender.sendMessage("§4[100H 100H]§c Command <timer> requires syntax <setting> <argument>!");
             return true;
-        } else if (!(args[0].equals("color") || args[0].equals("display") || args[0].equals("text_type") || args[0].equals("time_units") || args[0].equals("reset"))) {
-            commandSender.sendMessage("§4[100H 100H]§c Invalid setting given! Use <color/display/text_type/time_units/reset>.");
+        } else if (!(args[0].equals("color") || args[0].equals("display") || args[0].equals("time_units") || args[0].equals("reset"))) {
+            commandSender.sendMessage("§4[100H 100H]§c Invalid setting given! Use <color/display/time_units/reset>.");
             return true;
         }
 
@@ -79,23 +78,6 @@ public class Timer implements CommandExecutor, TabCompleter {
                     args = Array.arrayAppend(args, settings.getTimerBossbarColorType());
                     args = Array.arrayAppend(args, settings.getTimerBossbarStyleType());
                     args = Array.arrayAppend(args, string);
-                } break;
-
-            case "text_type":
-
-                if (!isValidFormat(args[1])) {
-                    commandSender.sendMessage("§4[100H 100H]§c Invalid format at first argument!");
-                    return true;
-                } else if (args.length == 3) {
-                    if (!isValidFormat(args[2])) {
-                        commandSender.sendMessage("§4[100H 100H]§c Invalid format at second argument!");
-                        return true;
-                    }
-                } else if (args.length > 3) {
-                    commandSender.sendMessage("§4[100H 100H]§c Setting <text_type> only requires arguments <format> <format>!");
-                    return true;
-                } else {
-                    args = Array.arrayAppend(args, OneHHOneHH.PLAYERSETTINGS.get(((Player) commandSender).getUniqueId()).getTimerTextType()[1]);
                 } break;
 
             case "time_units":
@@ -153,11 +135,6 @@ public class Timer implements CommandExecutor, TabCompleter {
                         yield compareStrings(args[1], DISPLAYS);
                     } else {yield Arrays.stream(DISPLAYS).toList();}
                 }
-                case "text_type" -> {
-                    if (!args[1].isEmpty()) {
-                        yield compareStrings(args[1], FORMATS);
-                    } else {yield Arrays.stream(FORMATS).toList();}
-                }
                 case "time_units" -> {
                     if (!args[1].isEmpty()) {
                         yield compareStrings(args[1], TIMEUNITS);
@@ -183,11 +160,6 @@ public class Timer implements CommandExecutor, TabCompleter {
                     if (!args[2].isEmpty() && args[1].equals("boss_bar")) {
                         yield compareStrings(args[2], BOSSBARCOLORS);
                     } else {yield Arrays.stream(BOSSBARCOLORS).toList();}
-                }
-                case "text_type" -> {
-                    if (!args[2].isEmpty()) {
-                        yield compareStrings(args[2], FORMATS);
-                    } else {yield Arrays.stream(FORMATS).toList();}
                 }
             };
         }
@@ -216,25 +188,6 @@ public class Timer implements CommandExecutor, TabCompleter {
         for (String color : colors) {
             if (arg.equals(color)) {return true;}
         } return false;
-    }
-
-    static boolean isValidFormat(String arg) {
-
-        String[] arg_array = arg.split("_", 0);
-        String[] formats = {"normal", "bold", "italic", "underlined"};
-        boolean[] booleans = new boolean[arg_array.length];
-
-        for (int i=0; i < arg_array.length; i++) {
-            for (String format : formats) {
-                if (arg_array[i].equals(format)) {
-                    booleans[i] = true;
-                    break;
-                }
-            }
-        }
-
-        for (boolean bool : booleans) {if (!bool) {return false;}}
-        return true;
     }
 
     static List<String> compareStrings(String input, String[] strings) {

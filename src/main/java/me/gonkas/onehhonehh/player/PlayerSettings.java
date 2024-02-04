@@ -21,7 +21,6 @@ public class PlayerSettings {
 
     String timer_display;
     String[] timer_color;
-    String[] timer_text_type;
     String[] timer_time_units;
     String timer_time_unit_type;
 
@@ -47,7 +46,6 @@ public class PlayerSettings {
 
         timer_display = config.getString("timer-display.display");
         timer_color = colorEncoder(config.getString("timer-color").split("-"));
-        timer_text_type = textTypeEncoder(config.getString("timer-text-type").split("-"));
         timer_time_units = timeUnitsEncoder(config.getString("timer-time-units"));
         timer_time_unit_type = config.getString("timer-time-units");
 
@@ -72,31 +70,6 @@ public class PlayerSettings {
             case "shortened" -> new String[]{"h ", "min ", "s"};
             case "full" -> new String[]{"hours ", "minutes ", "seconds"};
         };
-    }
-
-    public static String[] textTypeEncoder(String[] array) {
-
-        String[][] text = settingsSplitter(array);
-        String[] result = {"", ""};
-
-        for (int i=0; i < text.length; i++) {
-            for (String setting : text[i]) {
-                switch (setting) {
-                    case "normal":
-                        result[i] = "§r";
-                        break;
-                    case "bold":
-                        result[i] += "§l";
-                        break;
-                    case "italic":
-                        result[i] += "§o";
-                        break;
-                    case "underlined":
-                        result[i] += "§n";
-                        break;
-                }
-            }
-        } return result;
     }
 
     public static String[] colorEncoder(String[] array) {
@@ -188,7 +161,6 @@ public class PlayerSettings {
     public boolean getHPBarsDisplay() {return minimize_health;}
     public String getTimerDisplay() {return timer_display;}
     public String[] getTimerColor() {return timer_color;}
-    public String[] getTimerTextType() {return timer_text_type;}
     public String[] getTimerTimeUnits() {return timer_time_units;}
     public String getTimerTimeUnitsType() {return timer_time_unit_type;}
 

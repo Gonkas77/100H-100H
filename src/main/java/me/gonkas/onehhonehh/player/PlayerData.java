@@ -41,7 +41,6 @@ public class PlayerData {
         config.set("timer-display.boss-bar.style", "solid");
         config.set("timer-display.boss-bar.progression", true);
         config.set("timer-color", "white-white");
-        config.set("timer-text-type", "normal-normal");
         config.set("timer-time-units", "shortened");
         config.set("sound-toggle", true);
         config.set("title-toggle", true);
@@ -164,18 +163,6 @@ public class PlayerData {
 
                         config.set("timer-color", arg + "-" + arg2);
                         OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_color = PlayerSettings.colorEncoder(new String[]{arg, arg2});
-
-                        try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
-                        catch (NullPointerException ignored) {}
-
-                        try {config.save(player_file);}
-                        catch (IOException e) {log("§4[100HP 100H] Error occurred when trying to save player §r§c<" + player.getName() + ">§r§4's data.");}
-                        break;
-
-                    case "timer_text_type":
-
-                        config.set("timer-text-type", arg + "-" + arg2);
-                        OneHHOneHH.PLAYERSETTINGS.get(player.getUniqueId()).timer_text_type = PlayerSettings.textTypeEncoder(new String[]{arg, arg2});
 
                         try {OneHHOneHH.SCOREBOARDS.get(player).getObjective(player.getName() + "_timer").unregister();}
                         catch (NullPointerException ignored) {}
